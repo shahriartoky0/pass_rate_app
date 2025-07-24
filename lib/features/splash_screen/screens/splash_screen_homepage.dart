@@ -82,6 +82,7 @@ class _SplashScreenHomepageState extends State<SplashScreenHomepage>
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/design/app_colors.dart';
+import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 
 import '../../../core/design/app_images.dart';
@@ -103,7 +104,7 @@ class _SplashScreenHomepageState extends State<SplashScreenHomepage>
     super.initState();
 
     // Initialize the animation controller
-    _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
 
     // Define the animation (from 0 to 1)
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
@@ -154,15 +155,26 @@ class _SplashScreenHomepageState extends State<SplashScreenHomepage>
                   right: 50,
                   child: Opacity(
                     // opacity: _animation.value > 0.5 ? (_animation.value - 0.5) * 2 : 0,
-                    opacity: ((_animation.value - 0.3) * 2).clamp(0.0, 1.0),                    // Increases opacity as it appears
+                    opacity: ((_animation.value - 0.3) * 2).clamp(0.0, 1.0),
+                    // Increases opacity as it appears
                     child: Transform.translate(
                       offset: Offset(-25 * (1 - _animation.value), 0),
                       // Moves the image right
                       // child: Image.asset(AppImages.logoTextImage, width: 200),
-                      child: const Text(
+                      child: Text(
                         'PassRate',
+                        // context.screenWidth.toString(),
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize:
+                              context.screenWidth < 300
+                                  ? 32
+                                  : context.screenWidth < 400
+                                  ? 38
+                                  : context.screenWidth < 600
+                                  ? 40
+                                  : context.screenWidth < 1024
+                                  ? 44
+                                  : 50,
                           fontWeight: FontWeight.w700,
                           color: AppColors.white,
                         ),

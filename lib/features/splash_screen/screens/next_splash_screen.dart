@@ -22,7 +22,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> with SingleTickerPr
   void initState() {
     super.initState();
 
-    _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
 
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
