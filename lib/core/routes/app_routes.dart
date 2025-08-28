@@ -5,7 +5,7 @@ class AppRoutes {
   static const String initialRoute = "/";
 
   //splash screen
-  static const String splashScreen = "/splash-screen";
+  static const String firstSplashScreen = "/splash-screen";
   static const String nextSplashScreen = "/next-splash-screen";
 
 

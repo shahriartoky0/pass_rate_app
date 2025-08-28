@@ -26,11 +26,22 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
               const SizedBox(height: AppSizes.md),
 
               /// Search field  ====>
-              TextFormField(
+              /*  TextFormField(
                 controller: _searchTeController,
                 decoration: const InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+                ),
+              ),*/
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+                  ),
+                  onPressed: () {},
+                  label: const Text('Search', style: TextStyle(color: AppColors.white)),
+                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
                 ),
               ),
               const SizedBox(height: AppSizes.md),
@@ -61,5 +72,3 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
     );
   }
 }
-
-

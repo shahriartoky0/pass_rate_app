@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
+import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/features/assessment/controllers/assessment_controller.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
@@ -63,11 +64,22 @@ class StatisticsScreen extends GetView<StatisticsController> {
               const SizedBox(height: AppSizes.lg),
 
               /// Search Bar ================ >
-              TextFormField(
+              /*    TextFormField(
                 controller: _searchTeController,
                 decoration: const InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+                ),
+              ),*/
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+                  ),
+                  onPressed: () {},
+                  label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
+                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
                 ),
               ),
               const SizedBox(height: AppSizes.lg),

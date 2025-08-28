@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
-import 'package:pass_rate/core/config/app_sizes.dart';
+ import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_colors.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/shared/widgets/app_button.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
+import '../../../core/config/app_strings.dart';
 import '../../../core/utils/device/device_utility.dart';
 import '../controllers/assessment_controller.dart';
 

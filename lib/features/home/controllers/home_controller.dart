@@ -1,30 +1,18 @@
 import 'package:get/get.dart';
+import 'package:pass_rate/core/config/app_constants.dart';
+import 'package:pass_rate/core/utils/device/device_info.dart';
+import 'package:pass_rate/core/utils/get_storage.dart';
+import 'package:pass_rate/core/utils/logger_utils.dart';
 
 class HomeController extends GetxController {
 
-  final RxInt count = 0.obs;
-
-  void increment() => count.value++;
-
-
-  
-  /// [onInit] Lifecycle method called when the controller is initialized.
-  ///
-  /// Resets loading states, clears existing data, and triggers and more..
-  /// initial fetch
-  /// 
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    final String? deviceId = await DeviceIdService.getDeviceId();
+    GetStorageModel().saveString(AppConstants.deviceId, deviceId ?? '');
+    LoggerUtils.debug(GetStorageModel().getString(AppConstants.deviceId));
+    // LoggerUtils.info(GetStorageModel().getString(AppConstants.deviceId));
     super.onInit();
-    count.value = 0;
   }
 
-  /// [dispose] Lifecycle method called when the controller is destroyed.
-  ///
-  /// Cleans up by resetting loading states and clearing lists and more...
-  @override
-  void dispose() {
-    super.dispose();
-    count.value = 0;
-  }
 }

@@ -1,8 +1,18 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pass_rate/core/config/app_asset_path.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
+import 'package:pass_rate/core/design/app_colors.dart';
 
 import '../../../core/common/widgets/custom_dropdown.dart';
+import '../../../core/common/widgets/custom_toast.dart';
+import '../../../core/routes/app_routes.dart';
+import '../../../core/utils/device/device_utility.dart';
 
 class AssessmentController extends GetxController {
+  RxBool isLottieVisible = false.obs;
+
   // Airline Names Demo Data
   final RxList<DropdownItem<String>> airlineNames =
       <DropdownItem<String>>[
@@ -43,9 +53,64 @@ class AssessmentController extends GetxController {
         const DropdownItem<String>(value: 'technical_knowledge', label: 'Technical Knowledge'),
       ].obs;
 
-  RxString result = ''.obs;
+  // List of assessment items with their names
+  final List<String> assessmentItemNames = <String>[
+    'Food and Beverages',
+    'Safety Briefing',
+    'Emergency Procedures',
+    'Customer Service',
+    'Cabin Preparation',
+    'Boarding Process',
+    'Communication Skills',
+    'Conflict Resolution',
+    'First Aid Knowledge',
+    'Uniform & Grooming',
+    'Teamwork',
+    'Punctuality',
+  ];
 
-  void buttonState(String status) {
-    result.value = status;
+  // Map to store results for each assessment item by index
+  final RxMap<int, String> assessmentResults = <int, String>{}.obs;
+
+  void setAssessmentResult(int index, String status) {
+    assessmentResults[index] = status;
+    if (allAssessmentsCompleted) {
+      isLottieVisible.value = true;
+      Future.delayed(const Duration(seconds: 2), () {
+        isLottieVisible.value = false;
+      });
+    }
+  }
+
+  String? getAssessmentResult(int index) {
+    return assessmentResults[index];
+  }
+
+  // Check if all assessments have been completed
+  bool get allAssessmentsCompleted {
+    return assessmentResults.length == assessmentItemNames.length;
+  }
+
+  // Get completion percentage
+  double get completionPercentage {
+    return assessmentResults.length / assessmentItemNames.length;
+  }
+
+  ///===================> Submission Logic ================>
+  void submitAssessment() {
+    if (allAssessmentsCompleted) {
+      DeviceUtility.hapticFeedback();
+      Get.toNamed(AppRoutes.confirmSubmissionPage);
+    } else {
+      ToastManager.show(
+        message: AppStrings.pleaseMarkAllTheAssessment.tr,
+        icon: const Icon(CupertinoIcons.info_circle_fill, color: AppColors.white),
+        backgroundColor: AppColors.darkRed,
+        textColor: AppColors.white,
+        animationDuration: const Duration(milliseconds: 500),
+        animationCurve: Curves.easeInSine,
+        duration: const Duration(seconds: 1),
+      );
+    }
   }
 }

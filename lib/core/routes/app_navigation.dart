@@ -13,7 +13,7 @@ import 'package:pass_rate/features/submissions/screens/submissions_screen.dart';
 import 'package:pass_rate/features/support/bindings/support_binding.dart';
 import 'package:pass_rate/features/support/screens/support_screen.dart';
 import '../../features/assessment/screens/submit_assessment_screen.dart';
-import '../../features/home/screens/home_screen.dart';
+import '../../features/home/screens/home_page.dart';
 import '../../features/splash_screen/screens/splash_screen_homepage.dart';
 
 class AppNavigation {
@@ -29,7 +29,7 @@ class AppNavigation {
     GetPage<dynamic>(
       name: AppRoutes.homeRoute,
       page: () => const HomePage(),
-      binding: HomeBinding(),
+      bindings: [HomeBinding()],
     ),
     GetPage<dynamic>(
       name: AppRoutes.submissionPage,
@@ -62,7 +62,7 @@ class AppNavigation {
       binding: StatisticsBinding(),
     ),
     GetPage<dynamic>(
-      name: AppRoutes.splashScreen,
+      name: AppRoutes.firstSplashScreen,
       page: () => const SplashScreenHomepage(),
       binding: SplashScreenBinding(),
     ),

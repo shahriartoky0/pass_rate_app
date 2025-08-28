@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_colors.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';

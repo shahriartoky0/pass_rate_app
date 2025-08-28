@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/features/assessment/controllers/assessment_controller.dart';
@@ -61,11 +61,22 @@ class ViewStatistics extends GetView<StatisticsController> {
               const SizedBox(height: AppSizes.lg),
 
               /// Search Bar ================ >
-              TextFormField(
+              /*    TextFormField(
                 controller: _searchTeController,
                 decoration: const InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+                ),
+              ),*/
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+                  ),
+                  onPressed: () {},
+                  label: const Text('Search', style: TextStyle(color: AppColors.white)),
+                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
                 ),
               ),
               const SizedBox(height: AppSizes.lg),

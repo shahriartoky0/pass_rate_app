@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
-import 'package:pass_rate/core/utils/logger_utils.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/app_images.dart';
+import '../../../core/config/app_strings.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/home_tile.dart';
 
@@ -129,3 +128,4 @@ class HomePage extends GetView<HomeController> {
     );
   }
 }
+
