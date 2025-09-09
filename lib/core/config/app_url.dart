@@ -9,4 +9,15 @@ class AppUrl {
   }
 
   static const String postSubmission = '$baseUrl/submissions';
+
+  static String topAirlinesByPassRate({String? year}) {
+    return '$baseUrl/statistics/top-airlines-pass-rate?date=$year';
+  }
+
+  static String topAirlinesBySubmission({String? year}) {
+    return '$baseUrl/statistics/top-airlines-submission?date=$year';
+  }
+
+  static String statSearchByAirline({required String airlineName}) =>
+      '$baseUrl/statistics/airlines-overview?name=$airlineName';
 }

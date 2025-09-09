@@ -17,7 +17,7 @@ class ToastManager {
     Color textColor = Colors.white,
     double borderRadius = 12.0,
     EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    Duration duration = const Duration(seconds: 3),
+    Duration duration = const Duration(seconds: 2),
     Duration animationDuration = const Duration(milliseconds: 300),
     Curve animationCurve = Curves.easeInOut,
   }) {

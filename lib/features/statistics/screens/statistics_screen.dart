@@ -1,28 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
+import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/features/assessment/controllers/assessment_controller.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/date_picker_field.dart';
+import '../../../core/config/app_asset_path.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/utils/logger_utils.dart';
 import '../controllers/statistics_controller.dart';
+import '../model/top_airlines_pass_rate_model.dart';
+import '../model/top_airlines_submission_model.dart';
 
 class StatisticsScreen extends GetView<StatisticsController> {
-  StatisticsScreen({super.key});
-
-  final TextEditingController _assessmentDateTEController = TextEditingController();
-  final TextEditingController _searchTeController = TextEditingController();
+  const StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    /// ========== to get the airline names =====>
+    final AssessmentController assessmentController = Get.put(AssessmentController());
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
       body: SingleChildScrollView(
@@ -38,11 +42,14 @@ class StatisticsScreen extends GetView<StatisticsController> {
             CustomDropdown<String>(
               label: AppStrings.airlineName.tr,
               isRequired: true,
-              items: Get.put(AssessmentController()).airlineNames,
+              items: assessmentController.airlineNames,
               hint: AppStrings.chooseAirlineName.tr,
               dropdownMaxHeight: 250,
               onChanged: (String? value) {
                 LoggerUtils.debug('Selected searchable country: $value');
+                if (value != null) {
+                  controller.statSearchAirlineName.value = value;
+                }
               },
               validator: (String? value) {
                 if (value == null) {
@@ -53,22 +60,13 @@ class StatisticsScreen extends GetView<StatisticsController> {
             ),
             const SizedBox(height: AppSizes.lg),
 
-            /// Select Year and Month ================ >
+            /*            /// Select Year and Month ================ >
             ReusableDatePickerField(
               labelText: AppStrings.selectYearAndMonth.tr,
               hintText: AppStrings.chooseAssessmentYear.tr,
-              controller: _assessmentDateTEController,
+              controller: controller.assessmentDateTEController,
             ),
-            const SizedBox(height: AppSizes.lg),
-
-            /// Search Bar ================ >
-            /*    TextFormField(
-              controller: _searchTeController,
-              decoration: const InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
-              ),
-            ),*/
+            const SizedBox(height: AppSizes.lg),*/
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -76,6 +74,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                   padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
                 ),
                 onPressed: () {},
+                icon: const Icon(CupertinoIcons.search, color: AppColors.white),
                 label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
                 // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
               ),
@@ -84,23 +83,66 @@ class StatisticsScreen extends GetView<StatisticsController> {
             Text(AppStrings.topResults.tr, style: context.txtTheme.titleMedium),
             const SizedBox(height: AppSizes.md),
 
-            ///==============> The filter container
-            statisticsContainer(
-              context: context,
-              title: AppStrings.topAirlinesByPassRate.tr,
-              list: <dynamic>[
-                <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
-              ],
+            /// ================> Top Airlines by Pass Rate ================>
+            Obx(
+              () => Visibility(
+                visible: controller.isLoadingPassRate.value == false,
+                replacement:
+                    Lottie.asset(
+                      ////========= Lottie color changed in a way  =====>
+                      delegates: LottieDelegates(
+                        values: <ValueDelegate<dynamic>>[
+                          ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
+                        ],
+                      ),
+                      AppAssetPath.aeroplaneLoader,
+                      height: context.screenHeight * 0.15,
+                      backgroundLoading: true,
+                    ).centered,
+                child: statisticsContainer(
+                  selectedYear: int.tryParse(controller.filterYearOfPassRate.value),
+                  context: context,
+                  title: AppStrings.topAirlinesByPassRate.tr,
+                  list: controller.topAirlinesByPassRate,
+                  onYearSelected: (int int) async {
+                    controller.filterYearOfPassRate.value = int.toString();
+                    await controller.topAirlineByPassRate();
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: AppSizes.md),
 
-            statisticsContainer(
-              context: context,
-              title: AppStrings.topAirlineSubmission.tr,
-              list: <dynamic>[
-                <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
-              ],
+            /// ================> Top Airlines by Submission Count ================>
+            Obx(
+              () => Visibility(
+                visible: controller.isLoadingSubmission.value == false,
+                replacement:
+                    Lottie.asset(
+                      ////========= Lottie color changed in a way  =====>
+                      delegates: LottieDelegates(
+                        values: <ValueDelegate<dynamic>>[
+                          ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
+                        ],
+                      ),
+                      AppAssetPath.aeroplaneLoader,
+                      height: context.screenHeight * 0.15,
+                      backgroundLoading: true,
+                    ).centered,
+                child: statisticsContainer(
+                  selectedYear: int.tryParse(controller.filterYearOfSubmission.value),
+                  context: context,
+                  title: AppStrings.topAirlineSubmission.tr,
+                  list: controller.topAirlinesBySubmission,
+                  onYearSelected: (int int) async {
+                    controller.filterYearOfSubmission.value = int.toString();
+                    await controller.topAirlineBySubmission();
+                  },
+                ),
+              ),
             ),
+
+            SizedBox(height: AppSizes.xl),
           ],
         ),
       ),
@@ -111,6 +153,8 @@ class StatisticsScreen extends GetView<StatisticsController> {
     required BuildContext context,
     required String title,
     required List<dynamic> list,
+    required Function(int) onYearSelected,
+    int? selectedYear,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
@@ -126,22 +170,28 @@ class StatisticsScreen extends GetView<StatisticsController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(title, style: context.txtTheme.headlineMedium),
-              InkWell(
-                onTap: () {
-                  ///TODO : the filter will pop up
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppSizes.borderRadiusSm),
-                    border: Border.all(color: AppColors.primaryColor),
-                  ),
-                  child: Row(
-                    spacing: 3,
-                    children: <Widget>[
-                      Text(AppStrings.year, style: context.txtTheme.labelSmall),
-                      const Icon(CupertinoIcons.chevron_down, size: 10, color: Colors.black),
-                    ],
+              Material(
+                child: InkWell(
+                  splashColor: AppColors.blue.withValues(alpha: 0.5),
+                  onTap: () {
+                    _showYearFilterDialog(context, onYearSelected, selectedYear);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppSizes.borderRadiusSm),
+                      border: Border.all(color: AppColors.primaryColor),
+                    ),
+                    child: Row(
+                      spacing: 3,
+                      children: <Widget>[
+                        Text(
+                          selectedYear?.toString() ?? AppStrings.year,
+                          style: context.txtTheme.labelSmall,
+                        ),
+                        const Icon(CupertinoIcons.chevron_down, size: 10, color: Colors.black),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -169,20 +219,95 @@ class StatisticsScreen extends GetView<StatisticsController> {
             shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
+              final dynamic item = list[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[Text(list[index]['labeltxt']), Text(list[index]['data'])],
+                  children: <Widget>[
+                    if (item is TopAirlineByPassRateModel) ...<Widget>[
+                      Text(item.airline),
+                      Text(item.passRate.toString()),
+                    ] else if (item is TopAirlineBySubmissionModel) ...<Widget>[
+                      Text(item.name),
+                      Text(item.count.toString()),
+                    ],
+                  ],
                 ),
               );
             },
-
             separatorBuilder: (BuildContext context, int index) {
               return const Divider();
             },
           ),
         ],
+      ),
+    );
+  }
+
+  // Helper function to show year filter dialog
+  void _showYearFilterDialog(
+    BuildContext context,
+    Function(int) onYearSelected,
+    int? currentSelectedYear,
+  ) {
+    // Generate list of years (last 10 years + current year)
+    final int currentYear = DateTime.now().year;
+    final List<int> years = List.generate(10, (int index) => currentYear - index);
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
+            border: Border.all(color: AppColors.primaryColor, width: 2),
+          ),
+          padding: const EdgeInsets.all(AppSizes.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(AppStrings.selectYear.tr, style: context.txtTheme.headlineMedium),
+              const SizedBox(height: AppSizes.md),
+
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: years.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final int year = years[index];
+                    return ListTile(
+                      title: Text(year.toString()),
+                      trailing:
+                          currentSelectedYear == year
+                              ? const Icon(CupertinoIcons.check_mark, color: AppColors.primaryColor)
+                              : null,
+                      onTap: () {
+                        Get.back();
+                        onYearSelected(year);
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: AppSizes.md),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      child: Text(
+                        AppStrings.cancel.tr,
+                        style: context.txtTheme.headlineMedium?.copyWith(color: AppColors.red),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

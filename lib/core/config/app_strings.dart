@@ -78,6 +78,9 @@ class AppStrings {
   static const String mySubmission = 'My Submissions';
   static const String deletedMessage = 'Submission successfully deleted ';
   static const String submissionFailed = 'Submission Failed !!! ';
+  static const String cancel = 'Cancel';
+  static const String allYears = 'All Years';
+  static const String selectYear = 'Select Years';
 
   // urls
   static const String apiBaseUrl = '';

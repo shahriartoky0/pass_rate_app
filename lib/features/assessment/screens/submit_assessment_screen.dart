@@ -83,7 +83,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
                     Lottie.asset(
                       ////========= Lottie color changed in a way  =====>
                       delegates: LottieDelegates(
-                        values: <ValueDelegate>[
+                        values: <ValueDelegate<dynamic>>[
                           ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
                         ],
                       ),
