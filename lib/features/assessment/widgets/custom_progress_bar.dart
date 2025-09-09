@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CupertinoProgressIndicator extends StatefulWidget {
+class AirplaneProgressIndicator extends StatefulWidget {
   final double progress;
   final int completed;
   final int total;
   final Color primaryColor;
   final Color backgroundColor;
 
-  const CupertinoProgressIndicator({
+  const AirplaneProgressIndicator({
     super.key,
     required this.progress,
     required this.completed,
@@ -18,10 +18,10 @@ class CupertinoProgressIndicator extends StatefulWidget {
   });
 
   @override
-  State<CupertinoProgressIndicator> createState() => _CupertinoProgressIndicatorState();
+  State<AirplaneProgressIndicator> createState() => _AirplaneProgressIndicatorState();
 }
 
-class _CupertinoProgressIndicatorState extends State<CupertinoProgressIndicator>
+class _AirplaneProgressIndicatorState extends State<AirplaneProgressIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _progressAnimation;
@@ -49,7 +49,7 @@ class _CupertinoProgressIndicatorState extends State<CupertinoProgressIndicator>
   }
 
   @override
-  void didUpdateWidget(CupertinoProgressIndicator oldWidget) {
+  void didUpdateWidget(AirplaneProgressIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
       _progressAnimation = Tween<double>(

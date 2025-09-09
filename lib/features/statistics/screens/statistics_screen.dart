@@ -24,87 +24,84 @@ class StatisticsScreen extends GetView<StatisticsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CustomAppBar(label: AppStrings.statisticsOverview.tr),
-              const SizedBox(height: AppSizes.md),
-              Text(
-                AppStrings.checkPassRatesAssessmentContent.tr,
-                style: context.txtTheme.titleMedium,
-              ),
-              const SizedBox(height: AppSizes.lg),
-              CustomDropdown<String>(
-                label: AppStrings.airlineName.tr,
-                isRequired: true,
-                items: Get.put(AssessmentController()).airlineNames,
-                hint: AppStrings.chooseAirlineName.tr,
-                dropdownMaxHeight: 250,
-                onChanged: (String? value) {
-                  LoggerUtils.debug('Selected searchable country: $value');
-                },
-                validator: (String? value) {
-                  if (value == null) {
-                    return 'Please select a type';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppSizes.lg),
+      appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              AppStrings.checkPassRatesAssessmentContent.tr,
+              style: context.txtTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSizes.lg),
+            CustomDropdown<String>(
+              label: AppStrings.airlineName.tr,
+              isRequired: true,
+              items: Get.put(AssessmentController()).airlineNames,
+              hint: AppStrings.chooseAirlineName.tr,
+              dropdownMaxHeight: 250,
+              onChanged: (String? value) {
+                LoggerUtils.debug('Selected searchable country: $value');
+              },
+              validator: (String? value) {
+                if (value == null) {
+                  return 'Please select a type';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSizes.lg),
 
-              /// Select Year and Month ================ >
-              ReusableDatePickerField(
-                labelText: AppStrings.selectYearAndMonth.tr,
-                hintText: AppStrings.chooseAssessmentYear.tr,
-                controller: _assessmentDateTEController,
-              ),
-              const SizedBox(height: AppSizes.lg),
+            /// Select Year and Month ================ >
+            ReusableDatePickerField(
+              labelText: AppStrings.selectYearAndMonth.tr,
+              hintText: AppStrings.chooseAssessmentYear.tr,
+              controller: _assessmentDateTEController,
+            ),
+            const SizedBox(height: AppSizes.lg),
 
-              /// Search Bar ================ >
-              /*    TextFormField(
-                controller: _searchTeController,
-                decoration: const InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+            /// Search Bar ================ >
+            /*    TextFormField(
+              controller: _searchTeController,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+              ),
+            ),*/
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
                 ),
-              ),*/
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
-                  ),
-                  onPressed: () {},
-                  label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
-                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
-                ),
+                onPressed: () {},
+                label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
+                // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
               ),
-              const SizedBox(height: AppSizes.lg),
-              Text(AppStrings.topResults.tr, style: context.txtTheme.titleMedium),
-              const SizedBox(height: AppSizes.md),
+            ),
+            const SizedBox(height: AppSizes.lg),
+            Text(AppStrings.topResults.tr, style: context.txtTheme.titleMedium),
+            const SizedBox(height: AppSizes.md),
 
-              ///==============> The filter container
-              statisticsContainer(
-                context: context,
-                title: AppStrings.topAirlinesByPassRate.tr,
-                list: <dynamic>[
-                  <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
-                ],
-              ),
-              const SizedBox(height: AppSizes.md),
+            ///==============> The filter container
+            statisticsContainer(
+              context: context,
+              title: AppStrings.topAirlinesByPassRate.tr,
+              list: <dynamic>[
+                <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
+              ],
+            ),
+            const SizedBox(height: AppSizes.md),
 
-              statisticsContainer(
-                context: context,
-                title: AppStrings.topAirlineSubmission.tr,
-                list: <dynamic>[
-                  <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
-                ],
-              ),
-            ],
-          ),
+            statisticsContainer(
+              context: context,
+              title: AppStrings.topAirlineSubmission.tr,
+              list: <dynamic>[
+                <String, String>{'labeltxt': 'Airplane Name', 'data': '98%'},
+              ],
+            ),
+          ],
         ),
       ),
     );

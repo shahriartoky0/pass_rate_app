@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
+import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 import '../../../core/design/app_colors.dart';
@@ -21,7 +22,7 @@ class HomePage extends GetView<HomeController> {
       floatingActionButton: helpingButtonWidget(
         context: context,
         onTap: () {
-         Get.toNamed(AppRoutes.supportPage);
+          Get.toNamed(AppRoutes.supportPage);
         },
       ),
 
@@ -59,6 +60,10 @@ class HomePage extends GetView<HomeController> {
                       Get.toNamed(AppRoutes.submissionPage);
                     },
                   ),
+                  if (context.screenHeight < 600)
+                    const SizedBox(height: AppSizes.xxxL + AppSizes.xxl)
+                  else
+                    const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -74,17 +79,19 @@ class HomePage extends GetView<HomeController> {
       child: Material(
         elevation: 3,
         color: Colors.white,
-        borderRadius: BorderRadius.circular(3), // Add borderRadius here
+        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
 
+        // Add borderRadius here
         child: InkWell(
           splashColor: AppColors.green.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
           onTap: onTap,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0),
             width: context.screenWidth * .5,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.green),
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +113,7 @@ class HomePage extends GetView<HomeController> {
   Container homeTopWidget(BuildContext context) {
     return Container(
       width: context.width,
-      height: context.height * .25,
+      height: 220,
       decoration: const BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.only(
@@ -128,4 +135,3 @@ class HomePage extends GetView<HomeController> {
     );
   }
 }
-

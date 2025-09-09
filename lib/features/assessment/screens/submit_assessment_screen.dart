@@ -5,6 +5,9 @@ import 'package:pass_rate/core/config/app_asset_path.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
+import 'package:pass_rate/core/extensions/widget_extensions.dart';
+import 'package:pass_rate/core/routes/app_routes.dart';
+import 'package:pass_rate/core/utils/custom_loader.dart';
 import 'package:pass_rate/core/utils/enum.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
 import 'package:pass_rate/shared/widgets/app_button.dart';
@@ -25,7 +28,12 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(label: AppStrings.submitResultTitle.tr),
+      appBar: CustomAppBar(
+        label: AppStrings.submitResultTitle.tr,
+        // onPressed: () {
+        //   Get.offAllNamed(AppRoutes.homeRoute);
+        // },
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(
@@ -44,7 +52,11 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
               hint: AppStrings.chooseAirlineName.tr,
               dropdownMaxHeight: 250,
               onChanged: (String? value) {
-                LoggerUtils.debug('Selected searchable country: $value');
+                controller.getAirlineAssessments(airlineName: value ?? '');
+                if (value != null) {
+                  controller.selectedAirlineName.value = value;
+                }
+                // LoggerUtils.debug(controller.selectedAirlineName);
               },
               validator: (String? value) {
                 if (value == null) {
@@ -56,128 +68,118 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
 
             const SizedBox(height: AppSizes.lg),
 
-            /// Select Year and Month ================ >
+            /*            /// Select Year and Month ================ >
             ReusableDatePickerField(
               labelText: AppStrings.selectYearAndMonth.tr,
               hintText: AppStrings.chooseAssessmentYear.tr,
               controller: _assessmentDateTEController,
             ),
-            const SizedBox(height: AppSizes.lg),
+            const SizedBox(height: AppSizes.lg),*/
 
             /// Assessment Items List ================ >
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: <Widget>[
-                    assessmentField(
-                      context: context,
-                      assessmentText: controller.assessmentItemNames[index],
-                    ),
-                    const SizedBox(height: AppSizes.md),
-
-                    /// Pass/Fail buttons for each item
-                    Obx(
-                      () => Row(
-                        spacing: 12,
-                        children: <Widget>[
-                          Expanded(
-                            child: passedFailedButton(
-                              context: context,
-                              onTap: () {
-                                controller.setAssessmentResult(
-                                  index,
-                                  ResultStatus.passed.displayName,
-                                );
-                              },
-                              selected:
-                                  controller.getAssessmentResult(index) ==
-                                  ResultStatus.passed.displayName,
-                              label: ResultStatus.passed.displayName,
-                              iconPath: AppIcons.passedIcon,
-                              tileColor: AppColors.green,
-                            ),
-                          ),
-                          Expanded(
-                            child: passedFailedButton(
-                              context: context,
-                              onTap: () {
-                                controller.setAssessmentResult(
-                                  index,
-                                  ResultStatus.failed.displayName,
-                                );
-                              },
-                              selected:
-                                  controller.getAssessmentResult(index) ==
-                                  ResultStatus.failed.displayName,
-                              label: ResultStatus.failed.displayName,
-                              iconPath: AppIcons.failedIcon,
-                              tileColor: AppColors.red,
-                            ),
-                          ),
+            Obx(
+              () => Visibility(
+                replacement:
+                    Lottie.asset(
+                      ////========= Lottie color changed in a way  =====>
+                      delegates: LottieDelegates(
+                        values: <ValueDelegate>[
+                          ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
                         ],
                       ),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (_, _) {
-                return const SizedBox(height: AppSizes.lg);
-              },
-              itemCount: controller.assessmentItemNames.length,
+                      AppAssetPath.aeroplaneLoader,
+                      height: context.screenHeight * 0.25,
+                      backgroundLoading: true,
+                    ).centered,
+                visible: controller.loader.value == false,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: <Widget>[
+                        assessmentField(
+                          context: context,
+                          assessmentText: controller.assessmentItemNames[index],
+                        ),
+                        const SizedBox(height: AppSizes.md),
+
+                        /// Pass/Fail buttons for each item
+                        Obx(
+                          () => Row(
+                            spacing: 12,
+                            children: <Widget>[
+                              Expanded(
+                                child: passedFailedButton(
+                                  context: context,
+                                  onTap: () {
+                                    controller.setAssessmentResult(
+                                      index,
+                                      ResultStatus.passed.displayName,
+                                    );
+                                  },
+                                  selected:
+                                      controller.getAssessmentResult(index) ==
+                                      ResultStatus.passed.displayName,
+                                  label: ResultStatus.passed.displayName,
+                                  iconPath: AppIcons.passedIcon,
+                                  tileColor: AppColors.green,
+                                ),
+                              ),
+                              Expanded(
+                                child: passedFailedButton(
+                                  context: context,
+                                  onTap: () {
+                                    controller.setAssessmentResult(
+                                      index,
+                                      ResultStatus.failed.displayName,
+                                    );
+                                  },
+                                  selected:
+                                      controller.getAssessmentResult(index) ==
+                                      ResultStatus.failed.displayName,
+                                  label: ResultStatus.failed.displayName,
+                                  iconPath: AppIcons.failedIcon,
+                                  tileColor: AppColors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (_, _) {
+                    return const SizedBox(height: AppSizes.lg);
+                  },
+                  itemCount: controller.assessmentItemNames.length,
+                ),
+              ),
             ),
 
             const SizedBox(height: AppSizes.xl),
-
-            /// Progress indicator (optional)
-            /*              Obx(
-              () =>
-                  controller.assessmentResults.isNotEmpty
-                      ? Column(
-                        children: <Widget>[
-                          LinearProgressIndicator(
-                            value: controller.completionPercentage,
-                            backgroundColor: AppColors.primaryColor.withValues(alpha: 0.2),
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              AppColors.primaryColor,
-                            ),
-                          ),
-                          const SizedBox(height: AppSizes.sm),
-                          Text(
-                            '${controller.assessmentResults.length} of ${controller.assessmentItemNames.length} completed',
-                            style: context.txtTheme.bodySmall,
-                          ),
-                          const SizedBox(height: AppSizes.lg),
-                        ],
-                      )
-                      : const SizedBox.shrink(),
-            ),*/
-            //  Obx(
-            //   () =>
-            //       controller.assessmentResults.isNotEmpty
-            //           ? CupertinoProgressIndicator(
-            //             progress: controller.completionPercentage,
-            //             completed: controller.assessmentResults.length,
-            //             total: controller.assessmentItemNames.length,
-            //             primaryColor: AppColors.primaryColor,
-            //           )
-            //           : const SizedBox.shrink(),
-            // ),
+            Obx(() => SizedBox(height: controller.allAssessmentsCompleted ? 0 : AppSizes.xxxL)),
 
             /// Submit Button
             Obx(
-              () => AppButton(
-                labelText: AppStrings.submit.tr,
-                onTap: () {
-                  controller.submitAssessment();
-                },
-                bgColor:
-                    controller.allAssessmentsCompleted
-                        ? AppColors.primaryColor
-                        : AppColors.primaryColor.withValues(alpha: 0.5),
-                textColor: Colors.white,
-              ),
+              () =>
+                  controller.allAssessmentsCompleted
+                      ? Visibility(
+                        visible: controller.submitLoader.value == false,
+                        replacement: const CustomLoading(),
+                        child: AppButton(
+                          labelText: AppStrings.submit.tr,
+                          onTap: () {
+                            controller.submitAssessment();
+                          },
+                          bgColor:
+                              controller.allAssessmentsCompleted
+                                  ? AppColors.primaryColor
+                                  : AppColors.primaryColor.withValues(alpha: 0.5),
+                          textColor: Colors.white,
+                        ),
+                      )
+                      : const SizedBox.shrink(),
             ),
             const SizedBox(height: AppSizes.lg),
           ],
@@ -188,13 +190,13 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
         () => SizedBox(
           width: context.screenWidth * 0.9,
           child:
-              (controller.allAssessmentsCompleted && controller.assessmentItemNames.isNotEmpty)
+              (controller.allAssessmentsCompleted)
                   ? Visibility(
                     visible: controller.isLottieVisible.value,
                     child: Lottie.asset(AppAssetPath.aeroplaneProgress),
                   )
                   : controller.assessmentResults.isNotEmpty
-                  ? CupertinoProgressIndicator(
+                  ? AirplaneProgressIndicator(
                     progress: controller.completionPercentage,
                     completed: controller.assessmentResults.length,
                     total: controller.assessmentItemNames.length,

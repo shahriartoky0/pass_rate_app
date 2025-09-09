@@ -27,7 +27,6 @@ class AppStrings {
   static const String supportPlanCadetPlusDesc = "One-time yearly boost";
   static const String supportPlanFirstOfficerDesc = "Steady support from the right seat";
   static const String supportPlanCaptainDesc = "Big push from the left seat – truly appreciated";
-
   static const String supportPlanTitle = "Choose a support plan:";
   static const String salaryComparisons = "Salary comparisons";
   static const String realAssessmentInsights = "Real assessment insights";
@@ -50,15 +49,23 @@ class AppStrings {
   static const String whatWasIncludedInYour = "What was included in your assessment?";
   static const String assessment = "Assessment";
   static const String chooseTasks = "Choose tasks";
-  static const String passed = "Passed";
-  static const String failed = "Failed";
+  static const String pass = "PASS";
+  static const String fail  = "FAIL";
   static const String submit = "Submit";
   static const String submitAnother = "Submit Another";
   static const String viewStatics = "View Statistics";
   static const String resultSubmitted = "Thank you! Your result has been submitted.";
   static const String pleaseMarkAllTheAssessment = "Please mark all the assessment !!!";
   static const String readyToSubmit = 'Ready to submit';
+  static const String responsesSubmitted = 'Responses Submitted Successfully';
+
   static const String inProgress = "In progress...";
+  static const String noAirlineFound = "No Airline found !!!";
+  static const String unexpectedError = 'An unexpected error occurred. Please try again later.';
+  static const String networkError = 'Network request failed. Please try again later.';
+  static const String deleteTitle = "Do you want to delete this submission ?";
+  static const String totalResponses = 'Total Responses:';
+  static const String successRate = 'Success Rate';
 
   //statistics
   static const String statisticsOverview = 'Statistics Overview';
@@ -67,13 +74,18 @@ class AppStrings {
   static const String topAirlinesByPassRate = ' Top 5 Airlines by Pass Rate';
   static const String topAirlineSubmission = 'Top Airlines by Submission Count';
   static const String year = 'Year';
-  static const String search= 'Search';
+  static const String search = 'Search';
+  static const String mySubmission = 'My Submissions';
+  static const String deletedMessage = 'Submission successfully deleted ';
+  static const String submissionFailed = 'Submission Failed !!! ';
 
   // urls
   static const String apiBaseUrl = '';
   static const String imageBaseUrl = '';
 
   static const String viewsType = 'viewsType';
+  static const String yes = 'Yes';
+  static const String no = 'No';
 
   // tokens
   static const String token = 'token';
@@ -86,5 +98,5 @@ class AppStrings {
   static const String submitAssessment = 'Submit Assessment';
   static const String statistics = 'Statistics';
   static const String yourSubmissions = 'Your Submissions';
-  static const String helpUsGrow = 'Help Us Grow!';
+  static const String helpUsGrow = 'Help Us to Grow!';
 }

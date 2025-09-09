@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
+import '../../design/app_colors.dart';
 
 
 class ToastManager {
@@ -11,7 +12,7 @@ class ToastManager {
   static void show({
     required String message,
     Widget icon = const Icon(Icons.error_outline),
-    Color backgroundColor = const Color(0xFF222222),
+    Color backgroundColor = AppColors.primaryColor,
     Color iconColor = Colors.white,
     Color textColor = Colors.white,
     double borderRadius = 12.0,
@@ -164,11 +165,14 @@ class CustomToast extends StatelessWidget {
 }
 
 /*ToastManager.show(
-message: "Sohan is the best Developper ",
-icon: Icons.wifi_off,
+message: AppStrings.deletedMessage.tr,
+icon: const Icon(
+CupertinoIcons.check_mark_circled,
+color: AppColors.white,
+),
 // backgroundColor: Colors.red.shade700,
-backgroundColor: Colors.black,
-animationDuration: const Duration(milliseconds: 500),
+backgroundColor: AppColors.primaryColor,
+animationDuration: const Duration(milliseconds: 900),
 animationCurve: Curves.easeInSine,
-duration: const Duration(seconds: 1),
+duration: const Duration(seconds: 2),
 );*/

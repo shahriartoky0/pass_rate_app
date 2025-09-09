@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/utils/enum.dart';
+import 'package:pass_rate/core/utils/logger_utils.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../shared/widgets/custom_appbar.dart' show CustomAppBar;
 import '../controllers/submissions_controller.dart';
@@ -16,57 +18,60 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
-          child: Column(
-            children: <Widget>[
-              /// Appbar ====>
-              const CustomAppBar(label: 'My Submissions'),
-              const SizedBox(height: AppSizes.md),
+      appBar: CustomAppBar(label: AppStrings.mySubmission.tr),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: AppSizes.md),
 
-              /// Search field  ====>
-              /*  TextFormField(
-                controller: _searchTeController,
-                decoration: const InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
-                ),
-              ),*/
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
-                  ),
-                  onPressed: () {},
-                  label: const Text('Search', style: TextStyle(color: AppColors.white)),
-                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
-                ),
+            /// Search field  ====>
+            TextFormField(
+              controller: _searchTeController,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
               ),
-              const SizedBox(height: AppSizes.md),
+            ),
+            const SizedBox(height: AppSizes.md),
 
-              /// Submission Container  ====>
-              Expanded(
-                child: ListView.separated(
-                  // physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 20,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SubmissionTile(
-                      bodyText: 'July 2024',
-                      name: 'Ryanair',
-                      resultStatus: ResultStatus.failed.displayName,
-                    );
-                  },
-
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: AppSizes.md);
-                  },
+            ///=====================> Search button ===============>
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
                 ),
+                onPressed: () {},
+                label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
+                // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: AppSizes.sm),
+
+            /// Submission Container  ====>
+            Expanded(
+              child: ListView.separated(
+                // physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 20,
+                itemBuilder: (BuildContext context, int index) {
+                  return SubmissionTile(
+                    bodyText: 'July 2024',
+                    name: 'Ryanair',
+                    resultStatus: ResultStatus.passed.displayName,
+                    onDelete: () {
+                      LoggerUtils.debug('I am Rakib checking =====');
+                    },
+                  );
+                },
+
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(height: AppSizes.md);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

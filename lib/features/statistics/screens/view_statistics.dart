@@ -21,102 +21,99 @@ class ViewStatistics extends GetView<StatisticsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CustomAppBar(label: AppStrings.statisticsOverview.tr),
-              const SizedBox(height: AppSizes.md),
-              Text(
-                AppStrings.checkPassRatesAssessmentContent.tr,
-                style: context.txtTheme.titleMedium,
-              ),
-              const SizedBox(height: AppSizes.lg),
-              CustomDropdown<String>(
-                label: AppStrings.airlineName.tr,
-                isRequired: true,
-                items: Get.put(AssessmentController()).airlineNames,
-                hint: AppStrings.chooseAirlineName.tr,
-                dropdownMaxHeight: 250,
-                onChanged: (String? value) {
-                  LoggerUtils.debug('Selected searchable country: $value');
-                },
-                validator: (String? value) {
-                  if (value == null) {
-                    return 'Please select a type';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppSizes.lg),
+      appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              AppStrings.checkPassRatesAssessmentContent.tr,
+              style: context.txtTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSizes.lg),
+            CustomDropdown<String>(
+              label: AppStrings.airlineName.tr,
+              isRequired: true,
+              items: Get.put(AssessmentController()).airlineNames,
+              hint: AppStrings.chooseAirlineName.tr,
+              dropdownMaxHeight: 250,
+              onChanged: (String? value) {
+                LoggerUtils.debug('Selected searchable country: $value');
+              },
+              validator: (String? value) {
+                if (value == null) {
+                  return 'Please select a type';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSizes.lg),
 
-              /// Select Year and Month ================ >
-              ReusableDatePickerField(
-                labelText: AppStrings.selectYearAndMonth.tr,
-                hintText: AppStrings.chooseAssessmentYear.tr,
-                controller: _assessmentDateTEController,
-              ),
-              const SizedBox(height: AppSizes.lg),
+            /// Select Year and Month ================ >
+            ReusableDatePickerField(
+              labelText: AppStrings.selectYearAndMonth.tr,
+              hintText: AppStrings.chooseAssessmentYear.tr,
+              controller: _assessmentDateTEController,
+            ),
+            const SizedBox(height: AppSizes.lg),
 
-              /// Search Bar ================ >
-              /*    TextFormField(
-                controller: _searchTeController,
-                decoration: const InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+            /// Search Bar ================ >
+            /*    TextFormField(
+              controller: _searchTeController,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+              ),
+            ),*/
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
                 ),
-              ),*/
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+                onPressed: () {},
+                label: const Text('Search', style: TextStyle(color: AppColors.white)),
+                // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
+              ),
+            ),
+            const SizedBox(height: AppSizes.lg),
+
+            ///==============> The bottom container
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.primaryColor),
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                color: Colors.white,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Rynair', style: context.txtTheme.titleMedium),
+                  Text('2024', style: context.txtTheme.labelMedium),
+                  const SizedBox(height: AppSizes.lg),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[Text('Total Responses:'), Text('124')],
                   ),
-                  onPressed: () {},
-                  label: const Text('Search', style: TextStyle(color: AppColors.white)),
-                  // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
-                ),
-              ),
-              const SizedBox(height: AppSizes.lg),
+                  const SizedBox(height: AppSizes.sm),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[Text('Success Rate'), Text('80%')],
+                  ),
+                  const Divider(),
+                  Text('Assessment Content', style: context.txtTheme.titleMedium),
+                  const SizedBox(height: AppSizes.sm),
+                  const Text('Sim'),
+                  const Text('Group Task'),
+                  const Text('Interview'),
 
-              ///==============> The bottom container
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.primaryColor),
-                  borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Rynair', style: context.txtTheme.titleMedium),
-                    Text('2024', style: context.txtTheme.labelMedium),
-                    const SizedBox(height: AppSizes.lg),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[Text('Total Responses:'), Text('124')],
-                    ),
-                    const SizedBox(height: AppSizes.sm),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[Text('Success Rate'), Text('80%')],
-                    ),
-                    const Divider(),
-                    Text('Assessment Content', style: context.txtTheme.titleMedium),
-                    const SizedBox(height: AppSizes.sm),
-                    const Text('Sim'),
-                    const Text('Group Task'),
-                    const Text('Interview'),
-
-                    const SizedBox(height: AppSizes.md),
-                  ],
-                ),
+                  const SizedBox(height: AppSizes.md),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

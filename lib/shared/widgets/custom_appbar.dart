@@ -7,8 +7,9 @@ import '../../core/design/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String label;
+  final VoidCallback? onPressed;
 
-  const CustomAppBar({super.key, required this.label});
+  const CustomAppBar({super.key, required this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: IconButton(
-        onPressed: () {
-          Get.back();
-        },
+        onPressed:
+            onPressed ??
+            () {
+              Get.back();
+            },
         icon: const Icon(CupertinoIcons.back, size: 20, color: AppColors.primaryColor),
       ),
       centerTitle: true,
@@ -31,5 +34,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(56.0); // Set the height of the app bar
+  Size get preferredSize => const Size.fromHeight(56.0);
 }
