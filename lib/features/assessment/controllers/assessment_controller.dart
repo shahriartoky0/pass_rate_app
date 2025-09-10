@@ -176,7 +176,7 @@ class AssessmentController extends GetxController {
         // Create the submission map
         final Map<String, dynamic> submissionData = <String, dynamic>{
           // "deviceId": deviceID,
-          "deviceId": "#_#sd@#sd-dfsdkdfshkdfj5ashrdssdsd@!!=",
+          "deviceId": "#_#sd@#sd#-dfsdsdkdfshkdfj5ashrdssdsd@!!=",
           "selectedAirline": selectedAirlineName.value,
           "selectedYear": DateTime
               .now()

@@ -1,32 +1,98 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pass_rate/core/common/widgets/custom_toast.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/design/app_colors.dart';
+import 'package:pass_rate/core/utils/device/device_utility.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
 import 'package:pass_rate/features/statistics/model/top_airlines_submission_model.dart';
 import '../../../core/config/app_url.dart';
 import '../../../core/network/network_caller.dart';
 import '../../../core/network/network_response.dart';
+import '../model/airline_statistics_model.dart';
 import '../model/top_airlines_pass_rate_model.dart';
 
 class StatisticsController extends GetxController {
-  // final TextEditingController assessmentDateTEController = TextEditingController();
+  final TextEditingController assessmentDateTEController = TextEditingController();
+  final RxString backEndDateFormat = ''.obs;
+
   RxString statSearchAirlineName = ''.obs;
-  final RxBool isLoadingPassRate = false.obs;
-  final RxBool isLoadingSubmission = false.obs;
+  final RxBool isLoadingPassRate = false.obs; // ===> loader
+  final RxBool isLoadingSubmission = false.obs; // ===> loader
+  final RxBool isLoadingSearch = false.obs; // ===> loader
   RxString filterYearOfPassRate = ''.obs;
   RxString filterYearOfSubmission = ''.obs;
   RxString filterYearOfSubmissionCount = ''.obs;
   final RxList<TopAirlineByPassRateModel> topAirlinesByPassRate = <TopAirlineByPassRateModel>[].obs;
   final RxList<TopAirlineBySubmissionModel> topAirlinesBySubmission =
       <TopAirlineBySubmissionModel>[].obs;
+  Rxn<AirlineStatisticsModel> airlineStatistics = Rxn<AirlineStatisticsModel>();
 
   @override
   Future<void> onInit() async {
-    await topAirlineByPassRate();
-    await topAirlineBySubmission();
+    topAirlineByPassRate();
+    topAirlineBySubmissionCount();
+    setCurrentDateFormat();
     super.onInit();
   }
 
+  void setCurrentDateFormat() {
+    final DateTime selectedDate = DateTime.now();
+    final int selectedYear = DateTime.now().year;
+    final String formattedDate = "$selectedYear-${DateFormat('MMMM').format(selectedDate)}";
+    assessmentDateTEController.text = formattedDate;
+    backEndDateFormat.value =
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}";
+  }
+
+  ///
+  /// ===================> Search Function ====================>
+  ///
+  ///
+  Future<void> searchStatistics() async {
+    try {
+      isLoadingSearch.value = true;
+
+      /// Setting the airline name if empty ===== >
+      if (statSearchAirlineName.value.isEmpty) {
+        ToastManager.show(
+          message: AppStrings.selectAnAirline.tr,
+          backgroundColor: AppColors.darkRed,
+          icon: const Icon(CupertinoIcons.airplane, color: AppColors.white),
+        );
+        return;
+      }
+      DeviceUtility.hapticFeedback();
+      LoggerUtils.debug(backEndDateFormat.value);
+      final NetworkResponse response = await NetworkCaller().getRequest(
+        AppUrl.statSearchByAirlineAndYear(
+          airlineName: statSearchAirlineName.value,
+          year: backEndDateFormat.value,
+        ),
+      );
+      final dynamic jsonData = response.jsonResponse?['data'] ?? <dynamic>[];
+      LoggerUtils.debug('here is the search data : $jsonData');
+
+      // Convert the list of maps to a list of AirlinePassRate objects
+      airlineStatistics.value = AirlineStatisticsModel.fromJson(jsonData);
+      LoggerUtils.debug('here is the search data from controller: ${airlineStatistics.value}');
+    } catch (e) {
+      ToastManager.show(
+        message: e.toString(),
+        backgroundColor: AppColors.darkRed,
+        textColor: AppColors.white,
+      );
+      LoggerUtils.error(e);
+    } finally {
+      isLoadingSearch.value = false;
+    }
+  }
+
+  /// ===========================> Top Results part ==============================>
+  ///
+  /// =============> Top 5 by Pass Rate  ======>
   Future<void> topAirlineByPassRate() async {
     try {
       isLoadingPassRate.value = true;
@@ -39,7 +105,7 @@ class StatisticsController extends GetxController {
         AppUrl.topAirlinesByPassRate(year: filterYearOfPassRate.value),
       );
       final List<dynamic> jsonData = response.jsonResponse?['data'] ?? <dynamic>[];
-      LoggerUtils.debug(jsonData);
+      // LoggerUtils.debug(jsonData);
 
       // Convert the list of maps to a list of AirlinePassRate objects
       topAirlinesByPassRate.value =
@@ -56,7 +122,10 @@ class StatisticsController extends GetxController {
     }
   }
 
-  Future<void> topAirlineBySubmission() async {
+  ///
+  /// =============> Top 5 by Submission Count  ======>
+  ///
+  Future<void> topAirlineBySubmissionCount() async {
     try {
       isLoadingSubmission.value = true;
 

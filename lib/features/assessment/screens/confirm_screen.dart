@@ -46,7 +46,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                 onTap: () {
                   /// simple Vibration
                   DeviceUtility.hapticFeedback();
-                  Get.toNamed(AppRoutes.viewStatisticsScreen);
+                  Get.toNamed(AppRoutes.statisticsScreen);
                 },
               ),
             ),
@@ -88,7 +88,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      submittedResponse.airlineName.toCapitalize,
+                      submittedResponse.airlineName,
                       style: context.txtTheme.titleMedium,
                     ),
                     Text(
@@ -100,7 +100,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(AppStrings.totalResponses.tr),
-                        Text(submittedResponse.totalRate.toString()),
+                        Text(submittedResponse.totalRate.toInt().toString()),
                       ],
                     ),
                     const SizedBox(height: AppSizes.sm),
@@ -108,7 +108,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(AppStrings.successRate.tr),
-                        Text(submittedResponse.totalSuccessRate.toString()),
+                        Text(submittedResponse.totalSuccessRate.toStringAsFixed(2)),
                       ],
                     ),
                     const SizedBox(height: AppSizes.md),

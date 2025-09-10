@@ -7,8 +7,9 @@ import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
+import 'package:pass_rate/core/extensions/strings_extensions.dart';
 import 'package:pass_rate/core/extensions/widget_extensions.dart';
-import 'package:pass_rate/core/routes/app_routes.dart';
+import 'package:pass_rate/core/utils/custom_loader.dart';
 import 'package:pass_rate/features/assessment/controllers/assessment_controller.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
@@ -45,10 +46,11 @@ class StatisticsScreen extends GetView<StatisticsController> {
               items: assessmentController.airlineNames,
               hint: AppStrings.chooseAirlineName.tr,
               dropdownMaxHeight: 250,
-              onChanged: (String? value) {
+              onChanged: (String? value) async {
                 LoggerUtils.debug('Selected searchable country: $value');
                 if (value != null) {
                   controller.statSearchAirlineName.value = value;
+                  await controller.searchStatistics();
                 }
               },
               validator: (String? value) {
@@ -60,89 +62,197 @@ class StatisticsScreen extends GetView<StatisticsController> {
             ),
             const SizedBox(height: AppSizes.lg),
 
-            /*            /// Select Year and Month ================ >
+            /// Select Year and Month ================ >
             ReusableDatePickerField(
               labelText: AppStrings.selectYearAndMonth.tr,
               hintText: AppStrings.chooseAssessmentYear.tr,
               controller: controller.assessmentDateTEController,
-            ),
-            const SizedBox(height: AppSizes.lg),*/
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
-                ),
-                onPressed: () {},
-                icon: const Icon(CupertinoIcons.search, color: AppColors.white),
-                label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
-                // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
-              ),
+              onDateSelected: (DateTime selectedDate) {
+                controller.backEndDateFormat.value =
+                    "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}";
+              },
             ),
             const SizedBox(height: AppSizes.lg),
-            Text(AppStrings.topResults.tr, style: context.txtTheme.titleMedium),
-            const SizedBox(height: AppSizes.md),
 
-            /// ================> Top Airlines by Pass Rate ================>
+            /// ========> The Search button ==============>
             Obx(
               () => Visibility(
-                visible: controller.isLoadingPassRate.value == false,
-                replacement:
-                    Lottie.asset(
-                      ////========= Lottie color changed in a way  =====>
-                      delegates: LottieDelegates(
-                        values: <ValueDelegate<dynamic>>[
-                          ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
-                        ],
-                      ),
-                      AppAssetPath.aeroplaneLoader,
-                      height: context.screenHeight * 0.15,
-                      backgroundLoading: true,
-                    ).centered,
-                child: statisticsContainer(
-                  selectedYear: int.tryParse(controller.filterYearOfPassRate.value),
-                  context: context,
-                  title: AppStrings.topAirlinesByPassRate.tr,
-                  list: controller.topAirlinesByPassRate,
-                  onYearSelected: (int int) async {
-                    controller.filterYearOfPassRate.value = int.toString();
-                    await controller.topAirlineByPassRate();
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSizes.md),
-
-            /// ================> Top Airlines by Submission Count ================>
-            Obx(
-              () => Visibility(
-                visible: controller.isLoadingSubmission.value == false,
-                replacement:
-                    Lottie.asset(
-                      ////========= Lottie color changed in a way  =====>
-                      delegates: LottieDelegates(
-                        values: <ValueDelegate<dynamic>>[
-                          ValueDelegate.color(const <String>['**'], value: AppColors.primaryColor),
-                        ],
-                      ),
-                      AppAssetPath.aeroplaneLoader,
-                      height: context.screenHeight * 0.15,
-                      backgroundLoading: true,
-                    ).centered,
-                child: statisticsContainer(
-                  selectedYear: int.tryParse(controller.filterYearOfSubmission.value),
-                  context: context,
-                  title: AppStrings.topAirlineSubmission.tr,
-                  list: controller.topAirlinesBySubmission,
-                  onYearSelected: (int int) async {
-                    controller.filterYearOfSubmission.value = int.toString();
-                    await controller.topAirlineBySubmission();
-                  },
+                visible: controller.isLoadingSearch.value == false,
+                replacement: const CustomLoading(),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+                    ),
+                    onPressed: () async {
+                      await controller.searchStatistics();
+                    },
+                    icon: const Icon(CupertinoIcons.search, color: AppColors.white),
+                    label: Text(
+                      AppStrings.search.tr,
+                      style: const TextStyle(color: AppColors.white),
+                    ),
+                    // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
+                  ),
                 ),
               ),
             ),
 
-            SizedBox(height: AppSizes.xl),
+            const SizedBox(height: AppSizes.md),
+
+            /// ==============> Search Result container =======>
+            Obx(
+              () =>
+                  controller.airlineStatistics.value != null
+                      ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.md,
+                          vertical: AppSizes.md,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.primaryColor),
+                          borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              controller.airlineStatistics.value?.name ??
+                                  controller.statSearchAirlineName.value,
+                              // The airline name
+                              style: context.txtTheme.titleMedium,
+                            ),
+                            Text(
+                              // the date
+                              controller.assessmentDateTEController.text,
+                              style: context.txtTheme.labelMedium,
+                            ),
+
+                            const SizedBox(height: AppSizes.lg),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(AppStrings.totalResponses.tr),
+                                Text(
+                                  (controller.airlineStatistics.value?.totalResponse ?? 0)
+                                      .toString(),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSizes.sm),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(AppStrings.successRate.tr),
+                                Text(
+                                  controller.airlineStatistics.value?.totalSuccessRate == -1
+                                      ? 'N/A'
+                                      : controller.airlineStatistics.value!.totalSuccessRate.toStringAsFixed(2),
+                                  style: context.txtTheme.labelMedium,
+                                )
+
+                              ],
+                            ),
+                            const SizedBox(height: AppSizes.sm),
+                            const Divider(),
+                            Text(
+                              AppStrings.assessmentContent.tr,
+                              style: context.txtTheme.titleMedium,
+                            ),
+                            const SizedBox(height: AppSizes.sm),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Text(
+                                  (controller.airlineStatistics.value?.content[index] ??
+                                          AppStrings.assessmentContent)
+                                      .toCapitalize,
+                                );
+                              },
+                              itemCount: controller.airlineStatistics.value?.content.length ?? 0,
+                            ),
+
+                            const SizedBox(height: AppSizes.md),
+                          ],
+                        ),
+                      )
+                      : const SizedBox.shrink(),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                /// ================> Top Airlines by Pass Rate ================>
+                const SizedBox(height: AppSizes.md),
+                Text(AppStrings.topResults.tr, style: context.txtTheme.titleMedium),
+                const SizedBox(height: AppSizes.md),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isLoadingPassRate.value == false,
+                    replacement:
+                        Lottie.asset(
+                          ////========= Lottie color changed in a way  =====>
+                          delegates: LottieDelegates(
+                            values: <ValueDelegate<dynamic>>[
+                              ValueDelegate.color(const <String>[
+                                '**',
+                              ], value: AppColors.primaryColor),
+                            ],
+                          ),
+                          AppAssetPath.aeroplaneLoader,
+                          height: context.screenHeight * 0.15,
+                          backgroundLoading: true,
+                        ).centered,
+                    child: statisticsContainer(
+                      selectedYear: int.tryParse(controller.filterYearOfPassRate.value),
+                      context: context,
+                      title: AppStrings.topAirlinesByPassRate.tr,
+                      list: controller.topAirlinesByPassRate,
+                      onYearSelected: (int int) async {
+                        controller.filterYearOfPassRate.value = int.toString();
+                        await controller.topAirlineByPassRate();
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSizes.md),
+
+                /// ================> Top Airlines by Submission Count ================>
+                Obx(
+                  () => Visibility(
+                    visible: controller.isLoadingSubmission.value == false,
+                    replacement:
+                        Lottie.asset(
+                          ////========= Lottie color changed in a way  =====>
+                          delegates: LottieDelegates(
+                            values: <ValueDelegate<dynamic>>[
+                              ValueDelegate.color(const <String>[
+                                '**',
+                              ], value: AppColors.primaryColor),
+                            ],
+                          ),
+                          AppAssetPath.aeroplaneLoader,
+                          height: context.screenHeight * 0.15,
+                          backgroundLoading: true,
+                        ).centered,
+                    child: statisticsContainer(
+                      selectedYear: int.tryParse(controller.filterYearOfSubmission.value),
+                      context: context,
+                      title: AppStrings.topAirlineSubmission.tr,
+                      list: controller.topAirlinesBySubmission,
+                      onYearSelected: (int int) async {
+                        controller.filterYearOfSubmission.value = int.toString();
+                        await controller.topAirlineBySubmissionCount();
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: AppSizes.xl),
           ],
         ),
       ),
@@ -227,10 +337,10 @@ class StatisticsScreen extends GetView<StatisticsController> {
                   children: <Widget>[
                     if (item is TopAirlineByPassRateModel) ...<Widget>[
                       Text(item.airline),
-                      Text(item.passRate.toString()),
+                      Text(item.passRate.toStringAsFixed(2).toString()),
                     ] else if (item is TopAirlineBySubmissionModel) ...<Widget>[
                       Text(item.name),
-                      Text(item.count.toString()),
+                      Text(item.count.toInt().toString()),
                     ],
                   ],
                 ),

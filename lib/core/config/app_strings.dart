@@ -45,12 +45,13 @@ class AppStrings {
   static const String airlineNameColon = "Airline Name :";
   static const String chooseAirlineName = "Choose the Airline Name";
   static const String selectYearAndMonth = "Select Year and Month";
+  static const String selectYear = "Select Year";
   static const String chooseAssessmentYear = "Choose the year of assessment";
   static const String whatWasIncludedInYour = "What was included in your assessment?";
   static const String assessment = "Assessment";
   static const String chooseTasks = "Choose tasks";
   static const String pass = "PASS";
-  static const String fail  = "FAIL";
+  static const String fail = "FAIL";
   static const String submit = "Submit";
   static const String submitAnother = "Submit Another";
   static const String viewStatics = "View Statistics";
@@ -80,7 +81,8 @@ class AppStrings {
   static const String submissionFailed = 'Submission Failed !!! ';
   static const String cancel = 'Cancel';
   static const String allYears = 'All Years';
-  static const String selectYear = 'Select Years';
+  static const String selectAnAirline = 'Please select an Airline !!';
+  static const String assessmentContent = 'Assessment Content';
 
   // urls
   static const String apiBaseUrl = '';

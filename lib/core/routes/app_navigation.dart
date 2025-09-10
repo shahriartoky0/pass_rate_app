@@ -12,7 +12,6 @@ import 'package:pass_rate/features/submissions/bindings/submissions_binding.dart
 import 'package:pass_rate/features/submissions/screens/submissions_screen.dart';
 import 'package:pass_rate/features/support/bindings/support_binding.dart';
 import 'package:pass_rate/features/support/screens/support_screen.dart';
-import '../../features/assessment/screens/submit_assessment_screen.dart';
 import '../../features/home/screens/home_page.dart';
 import '../../features/splash_screen/screens/splash_screen_homepage.dart';
 
@@ -23,7 +22,8 @@ class AppNavigation {
     /// Add the pages like this ================>
     GetPage<dynamic>(
       name: AppRoutes.initialRoute,
-      page: () => const HomePage(),transition: Transition.zoom,
+      page: () => const HomePage(),
+      transition: Transition.zoom,
       binding: HomeBinding(),
     ),
     GetPage<dynamic>(
@@ -41,11 +41,7 @@ class AppNavigation {
       page: () => const SupportScreen(),
       binding: SupportBinding(),
     ),
-    GetPage<dynamic>(
-      name: AppRoutes.submitAssessment,
-      page: () => SubmitAssessmentScreen(),
-      binding: AssessmentBinding(),
-    ),
+
     GetPage<dynamic>(
       name: AppRoutes.confirmSubmissionPage,
       page: () => const ConfirmSubmissionPage(),
@@ -53,7 +49,7 @@ class AppNavigation {
     ),
     GetPage<dynamic>(
       name: AppRoutes.statisticsScreen,
-      page: () => StatisticsScreen(),
+      page: () => const StatisticsScreen(),
       binding: StatisticsBinding(),
     ),
     GetPage<dynamic>(

@@ -18,6 +18,6 @@ class AppUrl {
     return '$baseUrl/statistics/top-airlines-submission?date=$year';
   }
 
-  static String statSearchByAirline({required String airlineName}) =>
-      '$baseUrl/statistics/airlines-overview?name=$airlineName';
+  static String statSearchByAirlineAndYear({required String airlineName, required String year}) =>
+      '$baseUrl/statistics/airlines-overview?name=$airlineName&date=$year';
 }
