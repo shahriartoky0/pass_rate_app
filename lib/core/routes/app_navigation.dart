@@ -7,11 +7,11 @@ import 'package:pass_rate/features/splash_screen/binding/splash_binding.dart';
 import 'package:pass_rate/features/splash_screen/screens/next_splash_screen.dart';
 import 'package:pass_rate/features/statistics/bindings/statistics_binding.dart';
 import 'package:pass_rate/features/statistics/screens/statistics_screen.dart';
-import 'package:pass_rate/features/statistics/screens/view_statistics.dart';
 import 'package:pass_rate/features/submissions/bindings/submissions_binding.dart';
 import 'package:pass_rate/features/submissions/screens/submissions_screen.dart';
 import 'package:pass_rate/features/support/bindings/support_binding.dart';
 import 'package:pass_rate/features/support/screens/support_screen.dart';
+import '../../features/assessment/screens/submit_assessment_screen.dart';
 import '../../features/home/screens/home_page.dart';
 import '../../features/splash_screen/screens/splash_screen_homepage.dart';
 
@@ -41,7 +41,11 @@ class AppNavigation {
       page: () => const SupportScreen(),
       binding: SupportBinding(),
     ),
-
+    GetPage<dynamic>(
+      name: AppRoutes.submitAssessment,
+      page: () => SubmitAssessmentScreen(),
+      binding: AssessmentBinding(),
+    ),
     GetPage<dynamic>(
       name: AppRoutes.confirmSubmissionPage,
       page: () => const ConfirmSubmissionPage(),
@@ -49,14 +53,10 @@ class AppNavigation {
     ),
     GetPage<dynamic>(
       name: AppRoutes.statisticsScreen,
-      page: () => const StatisticsScreen(),
+      page: () => StatisticsScreen(),
       binding: StatisticsBinding(),
     ),
-    GetPage<dynamic>(
-      name: AppRoutes.viewStatisticsScreen,
-      page: () => ViewStatistics(),
-      binding: StatisticsBinding(),
-    ),
+
     GetPage<dynamic>(
       name: AppRoutes.firstSplashScreen,
       page: () => const SplashScreenHomepage(),

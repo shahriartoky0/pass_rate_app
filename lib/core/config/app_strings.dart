@@ -49,6 +49,7 @@ class AppStrings {
   static const String chooseAssessmentYear = "Choose the year of assessment";
   static const String whatWasIncludedInYour = "What was included in your assessment?";
   static const String assessment = "Assessment";
+  static const String assessmentList = "Assessment List";
   static const String chooseTasks = "Choose tasks";
   static const String pass = "PASS";
   static const String fail = "FAIL";
@@ -62,17 +63,20 @@ class AppStrings {
 
   static const String inProgress = "In progress...";
   static const String noAirlineFound = "No Airline found !!!";
+  static const String noSubmissionFound = "No Submission found !!!";
   static const String unexpectedError = 'An unexpected error occurred. Please try again later.';
   static const String networkError = 'Network request failed. Please try again later.';
   static const String deleteTitle = "Do you want to delete this submission ?";
   static const String totalResponses = 'Total Responses:';
   static const String successRate = 'Success Rate';
+  static const String deletionFailed = 'Failed to delete the item !!';
+  static const String itemDeleted = 'Item Deleted ';
 
   //statistics
   static const String statisticsOverview = 'Statistics Overview';
   static const String topResults = 'Top Results';
   static const String checkPassRatesAssessmentContent = 'Check Pass Rates & Assessment Content';
-  static const String topAirlinesByPassRate = ' Top 5 Airlines by Pass Rate';
+  static const String topAirlinesByPassRate = ' Top Airlines by Pass Rate';
   static const String topAirlineSubmission = 'Top Airlines by Submission Count';
   static const String year = 'Year';
   static const String search = 'Search';
@@ -83,6 +87,8 @@ class AppStrings {
   static const String allYears = 'All Years';
   static const String selectAnAirline = 'Please select an Airline !!';
   static const String assessmentContent = 'Assessment Content';
+  static const String searchResult = "Search Result";
+  static const String status = "Status";
 
   // urls
   static const String apiBaseUrl = '';

@@ -12,11 +12,13 @@ import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/core/utils/custom_loader.dart';
 import 'package:pass_rate/features/assessment/controllers/assessment_controller.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
+import 'package:pass_rate/shared/widgets/slide_animation.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/date_picker_field.dart';
 import '../../../core/config/app_asset_path.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/utils/logger_utils.dart';
+import '../../../shared/widgets/lottie_loader.dart';
 import '../controllers/statistics_controller.dart';
 import '../model/top_airlines_pass_rate_model.dart';
 import '../model/top_airlines_submission_model.dart';
@@ -105,79 +107,89 @@ class StatisticsScreen extends GetView<StatisticsController> {
             Obx(
               () =>
                   controller.airlineStatistics.value != null
-                      ? Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.md,
-                          vertical: AppSizes.md,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.primaryColor),
-                          borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              controller.airlineStatistics.value?.name ??
-                                  controller.statSearchAirlineName.value,
-                              // The airline name
-                              style: context.txtTheme.titleMedium,
-                            ),
-                            Text(
-                              // the date
-                              controller.assessmentDateTEController.text,
-                              style: context.txtTheme.labelMedium,
-                            ),
+                      ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(AppStrings.searchResult.tr, style: context.txtTheme.titleMedium),
+                          const SizedBox(height: AppSizes.md),
+                          SlideAnimation(
+                            key: ValueKey<int>(DateTime.now().millisecondsSinceEpoch),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.md,
+                                vertical: AppSizes.md,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.primaryColor),
+                                borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    controller.airlineStatistics.value?.name ??
+                                        controller.statSearchAirlineName.value,
+                                    // The airline name
+                                    style: context.txtTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    // the date
+                                    controller.assessmentDateTEController.text,
+                                    style: context.txtTheme.labelMedium,
+                                  ),
 
-                            const SizedBox(height: AppSizes.lg),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(AppStrings.totalResponses.tr),
-                                Text(
-                                  (controller.airlineStatistics.value?.totalResponse ?? 0)
-                                      .toString(),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSizes.sm),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(AppStrings.successRate.tr),
-                                Text(
-                                  controller.airlineStatistics.value?.totalSuccessRate == -1
-                                      ? 'N/A'
-                                      : controller.airlineStatistics.value!.totalSuccessRate.toStringAsFixed(2),
-                                  style: context.txtTheme.labelMedium,
-                                )
+                                  const SizedBox(height: AppSizes.lg),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(AppStrings.totalResponses.tr),
+                                      Text(
+                                        (controller.airlineStatistics.value?.totalResponse ?? 0)
+                                            .toString(),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: AppSizes.sm),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(AppStrings.successRate.tr),
+                                      Text(
+                                        controller.airlineStatistics.value?.totalSuccessRate == -1
+                                            ? 'N/A'
+                                            : '${controller.airlineStatistics.value!.totalSuccessRate.toStringAsFixed(2)}%',
+                                        style: context.txtTheme.labelMedium,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: AppSizes.sm),
+                                  const Divider(),
+                                  Text(
+                                    AppStrings.assessmentContent.tr,
+                                    style: context.txtTheme.titleMedium,
+                                  ),
+                                  const SizedBox(height: AppSizes.sm),
+                                  ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Text(
+                                        (controller.airlineStatistics.value?.content[index] ??
+                                                AppStrings.assessmentContent)
+                                            .toCapitalize,
+                                      );
+                                    },
+                                    itemCount:
+                                        controller.airlineStatistics.value?.content.length ?? 0,
+                                  ),
 
-                              ],
+                                  const SizedBox(height: AppSizes.md),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: AppSizes.sm),
-                            const Divider(),
-                            Text(
-                              AppStrings.assessmentContent.tr,
-                              style: context.txtTheme.titleMedium,
-                            ),
-                            const SizedBox(height: AppSizes.sm),
-                            ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Text(
-                                  (controller.airlineStatistics.value?.content[index] ??
-                                          AppStrings.assessmentContent)
-                                      .toCapitalize,
-                                );
-                              },
-                              itemCount: controller.airlineStatistics.value?.content.length ?? 0,
-                            ),
-
-                            const SizedBox(height: AppSizes.md),
-                          ],
-                        ),
+                          ),
+                        ],
                       )
                       : const SizedBox.shrink(),
             ),
@@ -192,19 +204,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                   () => Visibility(
                     visible: controller.isLoadingPassRate.value == false,
                     replacement:
-                        Lottie.asset(
-                          ////========= Lottie color changed in a way  =====>
-                          delegates: LottieDelegates(
-                            values: <ValueDelegate<dynamic>>[
-                              ValueDelegate.color(const <String>[
-                                '**',
-                              ], value: AppColors.primaryColor),
-                            ],
-                          ),
-                          AppAssetPath.aeroplaneLoader,
-                          height: context.screenHeight * 0.15,
-                          backgroundLoading: true,
-                        ).centered,
+                    const LottieLoaderWidget().centered,
                     child: statisticsContainer(
                       selectedYear: int.tryParse(controller.filterYearOfPassRate.value),
                       context: context,
@@ -224,19 +224,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                   () => Visibility(
                     visible: controller.isLoadingSubmission.value == false,
                     replacement:
-                        Lottie.asset(
-                          ////========= Lottie color changed in a way  =====>
-                          delegates: LottieDelegates(
-                            values: <ValueDelegate<dynamic>>[
-                              ValueDelegate.color(const <String>[
-                                '**',
-                              ], value: AppColors.primaryColor),
-                            ],
-                          ),
-                          AppAssetPath.aeroplaneLoader,
-                          height: context.screenHeight * 0.15,
-                          backgroundLoading: true,
-                        ).centered,
+                    const LottieLoaderWidget().centered,
                     child: statisticsContainer(
                       selectedYear: int.tryParse(controller.filterYearOfSubmission.value),
                       context: context,

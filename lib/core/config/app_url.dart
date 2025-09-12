@@ -14,8 +14,16 @@ class AppUrl {
     return '$baseUrl/statistics/top-airlines-pass-rate?date=$year';
   }
 
+  static String deleteSubmission({String? submissionId}) {
+    return '$baseUrl/submissions/$submissionId';
+  }
   static String topAirlinesBySubmission({String? year}) {
     return '$baseUrl/statistics/top-airlines-submission?date=$year';
+  }
+
+  static String getMySubmission({String? deviceId}) {
+    deviceId ??= '';
+    return '$baseUrl/submissions/$deviceId';
   }
 
   static String statSearchByAirlineAndYear({required String airlineName, required String year}) =>

@@ -2,7 +2,8 @@ import 'package:pass_rate/core/config/app_strings.dart';
 
 enum ResultStatus {
   passed(AppStrings.pass),
-  failed(AppStrings.fail);
+  failed(AppStrings.fail),
+  none('');
 
   const ResultStatus(this.displayName);
 
