@@ -5,6 +5,7 @@ import 'package:pass_rate/core/config/app_asset_path.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
+import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/core/utils/custom_loader.dart';
 import 'package:pass_rate/core/utils/enum.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
@@ -16,22 +17,12 @@ import '../../../core/common/widgets/multi_select_drop_down.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../shared/widgets/custom_appbar.dart';
+import '../../../shared/widgets/lottie_loader.dart';
 import '../controllers/assessment_controller.dart';
 import '../widgets/custom_progress_bar.dart';
 
 class SubmitAssessmentScreen extends GetView<AssessmentController> {
   SubmitAssessmentScreen({super.key});
-
-  final List<MultiSelectItem<String>> assessmentItems = <MultiSelectItem<String>>[
-    const MultiSelectItem(value: 'safety', label: 'Safety Briefing'),
-    const MultiSelectItem(value: 'service', label: 'Customer Service'),
-    const MultiSelectItem(value: 'food', label: 'Food and Beverages'),
-    const MultiSelectItem(value: 'emergency', label: 'Emergency Procedures'),
-    const MultiSelectItem(value: 'communication', label: 'Communication Skills'),
-    const MultiSelectItem(value: 'teamwork', label: 'Teamwork'),
-    const MultiSelectItem(value: 'grooming', label: 'Uniform & Grooming'),
-    const MultiSelectItem(value: 'punctuality', label: 'Punctuality'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +43,10 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
               items: controller.airlineNames,
               hint: AppStrings.chooseAirlineName.tr,
               dropdownMaxHeight: 250,
-              onChanged: (String? value) {
+              onChanged: (String? value) async {
                 controller.updateSelectedAirline(value);
+                // call the function to get the assessments ===>
+                await controller.getAssessmentList();
               },
               validator: (String? value) {
                 if (value == null) {
@@ -66,24 +59,38 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
             const SizedBox(height: AppSizes.lg),
 
             /// Select Year and Month ================ >
-          ReusableDatePickerField(
-            labelText: AppStrings.selectYearAndMonth.tr,
-            hintText: AppStrings.chooseAssessmentYear.tr,
-            controller: controller.assessmentDateTEController, // Use regular controller
-            onDateSelected: (DateTime? selectedDate) {
-              // LoggerUtils.debug("Date picker callback triggered with: $selectedDate");
-              controller.onDateSelected(selectedDate);
-            },
-          ),
+            ReusableDatePickerField(
+              labelText: AppStrings.selectYearAndMonth.tr,
+              hintText: AppStrings.chooseAssessmentYear.tr,
+              controller: controller.assessmentDateTEController,
+              // Use regular controller
+              onDateSelected: (DateTime? selectedDate) {
+                // LoggerUtils.debug(
+                //   "Date picker callback triggered with: ${selectedDate?.toIso8601String()}",
+                // );
+                controller.isoFormatString = selectedDate?.toIso8601String() ?? '';
+                controller.onDateSelected(selectedDate);
+              },
+            ),
+
             const SizedBox(height: AppSizes.lg),
 
-            MultiSelectDropdown<String>(
-              items: assessmentItems,
-              label: AppStrings.assessmentList.tr,
-              onChanged: (List<String> selected) {
-                controller.updateAssessmentList(selected);
-                LoggerUtils.debug('Selected: $selected');
-              },
+            Obx(
+              () => Visibility(
+                visible: controller.selectedAirlineName.isNotEmpty,
+                child: Visibility(
+                  visible: controller.loader.value == false,
+                  replacement: const LottieLoaderWidget().centered,
+                  child: MultiSelectDropdown<String>(
+                    items: controller.assessmentItems,
+                    label: AppStrings.assessmentList.tr,
+                    onChanged: (List<String> selected) {
+                      controller.updateAssessmentList(selected);
+                      LoggerUtils.debug('Selected: $selected');
+                    },
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: AppSizes.lg),
 
@@ -150,7 +157,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
-        () => SizedBox(
+        () => !controller.allAssessmentsCompletedRx.value ?  SizedBox(
           width: context.screenWidth * 0.9,
           child:
               controller.isLottieVisible.value
@@ -163,7 +170,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
                     total: 4,
                     primaryColor: AppColors.primaryColor,
                   ),
-        ),
+        ): const SizedBox.shrink(),
       ),
     );
   }

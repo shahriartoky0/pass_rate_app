@@ -4,9 +4,7 @@ class AppUrl {
   static const String baseUrl = 'https://qemu-api.billal.space';
   static const String getAirlines = '$baseUrl/airlines';
 
-  static String airlineAssessment({required String airlineName}) {
-    return '$baseUrl/assessments/airline/$airlineName';
-  }
+  static String airlineAssessment = '$baseUrl/assessments/';
 
   static const String postSubmission = '$baseUrl/submissions';
 
@@ -17,6 +15,7 @@ class AppUrl {
   static String deleteSubmission({String? submissionId}) {
     return '$baseUrl/submissions/$submissionId';
   }
+
   static String topAirlinesBySubmission({String? year}) {
     return '$baseUrl/statistics/top-airlines-submission?date=$year';
   }

@@ -30,13 +30,25 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
           children: <Widget>[
             const SizedBox(height: AppSizes.md),
 
-            /// Search field  ====>
+            /// Search field with clear button ====>
             TextFormField(
               controller: controller.searchTEController,
               decoration: InputDecoration(
                 hintText: AppStrings.search.tr,
                 prefixIcon: const Icon(CupertinoIcons.search, color: AppColors.primaryColor),
+                suffixIcon: Obx(() =>
+                controller.searchQuery.value.isNotEmpty
+                    ? IconButton(
+                  icon: const Icon(CupertinoIcons.clear, color: AppColors.primaryColor),
+                  onPressed: controller.clearSearch,
+                )
+                    : const SizedBox.shrink()
+                ),
               ),
+              onChanged: (String value) {
+                // Real-time search as user types
+                controller.searchQuery.value = value.trim();
+              },
             ),
             const SizedBox(height: AppSizes.md),
 
@@ -47,48 +59,66 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
                 ),
-                onPressed: () {},
+                onPressed: controller.handleSearch,
                 label: Text(AppStrings.search.tr, style: const TextStyle(color: AppColors.white)),
-                // icon: const Icon(Icons.search,size: 32,color: AppColors.white,),
               ),
             ),
             const SizedBox(height: AppSizes.sm),
 
-            /// Submission Container  ====>
+            /// Submission Container with search results ====>
             Expanded(
               child: Obx(
-                () => Visibility(
+                    () => Visibility(
                   replacement: const LottieLoaderWidget().centered,
                   visible: controller.loader.value == false,
-                  child: ListView.separated(
-                    // physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: controller.mySubmissions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final MySubmissionModel submission = controller.mySubmissions[index];
-                      LoggerUtils.debug(submission.submissionTime);
-                      // Parse the input string to a DateTime object
-                      final DateTime date = DateTime.parse(submission.submissionTime);
+                  child: Obx(() {
+                    final List<MySubmissionModel> filteredSubmissions = controller.filteredSubmissions;
 
-                      // Format the date as "yyyy - Month .."
-                      final String formattedDate = DateFormat('yyyy - MMMM').format(date);
-                      return SlideAnimation(
-                        delay: Duration(seconds: index * 2),
-                        child: SubmissionTile(
-                          submitDate: formattedDate,
-                          name: submission.selectedAirline,
-                          onDelete: () {
-                            controller.handleDelete(submission: submission);
-                          },
-                          assessments: submission.assessments,
+                    // Show "No results found" if searching and no results
+                    if (controller.searchQuery.value.isNotEmpty && filteredSubmissions.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              CupertinoIcons.search,
+                              size: 64,
+                              color: AppColors.primaryColor.withValues(alpha:0.5),
+                            ),
+                            const SizedBox(height: AppSizes.md),
+                            Text(
+                              'No results found for "${controller.searchQuery.value}"',
+                              style: context.txtTheme.bodyMedium?.copyWith(
+                                color: AppColors.primaryColor.withValues(alpha:0.7),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       );
-                    },
+                    }
 
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: AppSizes.md);
-                    },
-                  ),
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: filteredSubmissions.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final MySubmissionModel submission = filteredSubmissions[index];
+
+                        return SlideAnimation(
+                          delay: Duration(milliseconds: index * 100), // Reduced delay for better UX
+                          child: SubmissionTile(
+                              submittedAssessment: submission,
+                              onDelete: () {
+                                controller.handleDelete(submission: submission);
+                              }
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(height: AppSizes.md);
+                      },
+                    );
+                  }),
                 ),
               ),
             ),

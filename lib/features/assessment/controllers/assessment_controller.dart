@@ -10,6 +10,7 @@ import 'package:pass_rate/core/utils/device/device_info.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/custom_toast.dart';
+import '../../../core/common/widgets/multi_select_drop_down.dart';
 import '../../../core/config/app_url.dart';
 import '../../../core/network/network_caller.dart';
 import '../../../core/network/network_response.dart';
@@ -17,6 +18,7 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/device/device_utility.dart';
 import '../../../core/utils/enum.dart';
 import '../model/airline_model.dart';
+import '../model/assessment_model.dart';
 import '../model/submission_response.dart';
 
 class AssessmentController extends GetxController {
@@ -25,6 +27,7 @@ class AssessmentController extends GetxController {
 
   // Add a separate reactive string to track the date value
   RxString assessmentDate = ''.obs;
+  String isoFormatString = '';
 
   RxBool isLottieVisible = false.obs;
   RxBool loader = false.obs;
@@ -68,7 +71,7 @@ class AssessmentController extends GetxController {
         if (data.isNotEmpty) {
           airlineNames.clear();
           final List<Airline> airlines =
-          data.map((dynamic json) => Airline.fromJson(json)).toList();
+              data.map((dynamic json) => Airline.fromJson(json)).toList();
           for (final Airline airline in airlines) {
             airlineNames.add(
               DropdownItem<String>(value: airline.name, label: airline.name.toCapitalize),
@@ -121,7 +124,8 @@ class AssessmentController extends GetxController {
   // Method to handle date selection from date picker
   void onDateSelected(DateTime? selectedDate) {
     if (selectedDate != null) {
-      final String formattedDate = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}";
+      final String formattedDate =
+          "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}";
       assessmentDateTEController.text = formattedDate;
       // The listener will automatically call checkAndUpdateCompletion()
     }
@@ -129,17 +133,15 @@ class AssessmentController extends GetxController {
 
   // Central method to check completion and handle lottie logic
   void checkAndUpdateCompletion() {
-    LoggerUtils.debug("=== Progress Update Debug ===");
-    LoggerUtils.debug("Airline: '${selectedAirlineName.value}' (${selectedAirlineName.value.isNotEmpty})");
-    LoggerUtils.debug("Date: '${assessmentDate.value}' (${assessmentDate.value.isNotEmpty})");
-    LoggerUtils.debug("Assessments: ${assessmentList.length} items");
-    LoggerUtils.debug("Status: ${resultStatus.value} (${resultStatus.value != ResultStatus.none})");
+    // LoggerUtils.debug("=== Progress Update Debug ===");
+    // LoggerUtils.debug("Airline: '${selectedAirlineName.value}' (${selectedAirlineName.value.isNotEmpty})");
+    // LoggerUtils.debug("Date: '${assessmentDate.value}' (${assessmentDate.value.isNotEmpty})");
+    // LoggerUtils.debug("Assessments: ${assessmentList.length} items");
+    // LoggerUtils.debug("Status: ${resultStatus.value} (${resultStatus.value != ResultStatus.none})");
 
     final bool isCompleted = allAssessmentsCompleted;
     final double newProgress = completionPercentage;
     final int newSteps = completedSteps;
-
-    LoggerUtils.debug("Progress: $newProgress, Steps: $newSteps, Completed: $isCompleted");
 
     // Update progress values
     completionPercentageRx.value = newProgress;
@@ -149,27 +151,59 @@ class AssessmentController extends GetxController {
       // Just became completed - show lottie
       allAssessmentsCompletedRx.value = true;
       _showLottieAnimation();
-      LoggerUtils.debug("Assessment completed - showing lottie");
     } else if (!isCompleted && allAssessmentsCompletedRx.value) {
       // No longer completed - reset everything
       allAssessmentsCompletedRx.value = false;
       isLottieVisible.value = false;
-      LoggerUtils.debug("Assessment no longer completed - hiding lottie");
+      // LoggerUtils.debug("Assessment no longer completed - hiding lottie");
     }
-
-    LoggerUtils.debug("=== End Progress Debug ===");
   }
 
   void _showLottieAnimation() {
     isLottieVisible.value = true;
 
     // Hide lottie after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
+    Future<void>.delayed(const Duration(seconds: 3), () {
       isLottieVisible.value = false;
     });
   }
 
   ///================================> For the Assessment section ==========================>
+
+  final RxList<MultiSelectItem<String>> assessmentItems = <MultiSelectItem<String>>[].obs;
+
+  Future<void> getAssessmentList() async {
+    try {
+      loader.value = true;
+      final NetworkResponse getResponse = await NetworkCaller().getRequest(
+        AppUrl.airlineAssessment,
+      );
+
+      if (getResponse.statusCode == 200) {
+        final List<dynamic> data = getResponse.jsonResponse?['data'] ?? <dynamic>[];
+
+        if (data.isNotEmpty) {
+          assessmentItems.clear();
+          final List<Assessment> assessments =
+              data.map((dynamic json) => Assessment.fromJson(json)).toList();
+          for (final Assessment assessment in assessments) {
+            assessmentItems.add(
+              MultiSelectItem<String>(value: assessment.name, label: assessment.name.toCapitalize),
+            );
+          }
+        } else {
+          _showErrorMessage(AppStrings.noAirlineFound.tr);
+        }
+      } else {
+        _showErrorMessage(AppStrings.networkError.tr);
+      }
+    } catch (e) {
+      LoggerUtils.debug("Error in getAirlineNames: $e");
+      _showErrorMessage(AppStrings.unexpectedError.tr);
+    } finally {
+      loader.value = false;
+    }
+  }
 
   // Check if all assessments have been completed
   bool get allAssessmentsCompleted {
@@ -187,7 +221,8 @@ class AssessmentController extends GetxController {
     if (selectedAirlineName.value.isNotEmpty) {
       completedSteps++;
     }
-    if (assessmentDate.value.isNotEmpty) { // Use the reactive string
+    if (assessmentDate.value.isNotEmpty) {
+      // Use the reactive string
       completedSteps++;
     }
     if (assessmentList.isNotEmpty) {
@@ -209,7 +244,8 @@ class AssessmentController extends GetxController {
     if (selectedAirlineName.value.isNotEmpty) {
       completed++;
     }
-    if (assessmentDate.value.isNotEmpty) { // Use the reactive string
+    if (assessmentDate.value.isNotEmpty) {
+      // Use the reactive string
       completed++;
     }
     if (assessmentList.isNotEmpty) {
@@ -227,12 +263,23 @@ class AssessmentController extends GetxController {
     try {
       if (allAssessmentsCompleted) {
         DeviceUtility.hapticFeedback();
+
+        /// for the list of assessment Strings
+        final List<Map<String, String>> assessmentMapList = <Map<String, String>>[];
+
+        for (final String assessment in assessmentList) {
+          assessmentMapList.add(<String, String>{'name': assessment});
+        }
+
+        LoggerUtils.debug(assessmentMapList); // here is the list of the selected assessment .
         final String deviceID = await DeviceIdService.getDeviceId() ?? '';
 
         final Map<String, dynamic> submissionData = <String, dynamic>{
           "deviceId": AppConstants.demoDeviceId,
-          "selectedAirline": selectedAirlineName.value,
-          "selectedYear": DateTime.now().millisecondsSinceEpoch,
+          "airline": selectedAirlineName.value,
+          "date": isoFormatString,
+          "assessments": assessmentMapList,
+          "status": resultStatus.value.displayName,
         };
 
         LoggerUtils.debug("Submission Data: ${jsonEncode(submissionData)}");
@@ -254,7 +301,7 @@ class AssessmentController extends GetxController {
             response.jsonResponse ?? <String, dynamic>{},
           );
 
-          await Future.delayed(const Duration(seconds: 2));
+          await Future<void>.delayed(const Duration(seconds: 2));
           Get.offNamed(AppRoutes.confirmSubmissionPage, arguments: submissionResponse);
         } else {
           ToastManager.show(

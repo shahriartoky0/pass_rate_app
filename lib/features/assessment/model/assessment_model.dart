@@ -1,29 +1,28 @@
 class Assessment {
   final String id;
-  final String assessment; // This represents the "assessment" name
-  final String airline; // This represents the airline
-  final int version;
+  final String name;
 
-  // Constructor to initialize the class properties
   Assessment({
     required this.id,
-    required this.assessment,
-    required this.airline,
-    required this.version,
+    required this.name,
   });
 
-  // Factory constructor to create an instance from a JSON object
+  // Factory constructor to create object from JSON
   factory Assessment.fromJson(Map<String, dynamic> json) {
     return Assessment(
-      id: json['_id'], // The ID from the response
-      assessment: json['name'], // The name (assessment) from the response
-      airline: json['airline'], // The airline name from the response
-      version: json['__v'], // The version field from the response (if needed)
+      id: json['_id'] as String,
+      name: json['name'] as String,
     );
   }
 
-  // Method to convert an instance to a JSON object
+  // Convert object back to JSON
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'_id': id, 'name': assessment, 'airline': airline, '__v': version};
+    return <String, dynamic>{
+      '_id': id,
+      'name': name,
+    };
   }
+
+  @override
+  String toString() => 'Category(id: $id, name: $name)';
 }

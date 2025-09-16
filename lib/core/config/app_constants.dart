@@ -2,5 +2,5 @@ class AppConstants {
   AppConstants._();
 
   static const String deviceId = "Device-ID";
-  static const String demoDeviceId = "SDFsmentsdfsdfSDFasas";
+  static const String demoDeviceId = "SDFssdmesdfgntsdfsdfSDFasas";
 }

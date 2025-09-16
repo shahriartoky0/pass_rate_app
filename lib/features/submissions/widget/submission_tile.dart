@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/extensions/strings_extensions.dart';
-import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/features/submissions/model/my_submission.dart';
 import '../../../core/common/widgets/custom_modal.dart';
 import '../../../core/common/widgets/custom_svg.dart';
@@ -15,26 +15,20 @@ import '../../../core/utils/enum.dart';
 import '../../../shared/widgets/app_button.dart' show AppButton;
 
 class SubmissionTile extends StatelessWidget {
-  final String submitDate;
-  final String name;
+  final MySubmissionModel submittedAssessment;
   final VoidCallback onDelete;
-  final List<AssessmentModel> assessments;
 
-  const SubmissionTile({
-    super.key,
-    required this.submitDate,
-    required this.name,
-    required this.onDelete,
-    required this.assessments,
-  });
+  const SubmissionTile({super.key, required this.submittedAssessment, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
+    // Format the date as "yyyy - Month .."
+    final String formattedDate = DateFormat('yyyy - MMMM').format(submittedAssessment.date);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: AppColors.primaryColor,),
+        border: Border.all(color: AppColors.primaryColor),
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
       ),
       child: Column(
@@ -43,13 +37,15 @@ class SubmissionTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(child: Text(name, style: context.txtTheme.titleMedium)),
+              Expanded(
+                child: Text(submittedAssessment.airline, style: context.txtTheme.titleMedium),
+              ),
               Material(
                 color: Colors.white,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(50),
                   splashColor: AppColors.greyLight,
-                  onTap: (){
+                  onTap: () {
                     /// =================> Open the Delete Modal ===============>
                     CustomBottomSheet.show(
                       title: AppStrings.deleteTitle.tr,
@@ -67,7 +63,6 @@ class SubmissionTile extends StatelessWidget {
                                   onTap: () {
                                     onDelete();
                                     Navigator.pop(context);
-
                                   },
                                 ),
                               ),
@@ -95,77 +90,51 @@ class SubmissionTile extends StatelessWidget {
             ],
           ),
           Text(
-            submitDate,
+            formattedDate,
             style: context.txtTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
           ),
 
           const SizedBox(height: AppSizes.lg),
 
+          // Status Section
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                '${AppStrings.status.tr}:',
+                style: context.txtTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              _buildStatusChip(submittedAssessment.status),
+            ],
+          ),
+
+          const SizedBox(height: AppSizes.lg),
+
+          // Assessments List (if needed)
           Visibility(
-            visible: assessments.isNotEmpty,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: AppColors.greyLight),
-              ),
-              child: Table(
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FlexColumnWidth(7),
-                  1: FlexColumnWidth(3),
-                },
-                border: TableBorder(
-                  horizontalInside: BorderSide(color: AppColors.black.withValues(alpha: 0.2)),
-                  verticalInside: BorderSide(color: AppColors.black.withValues(alpha: 0.3)),
+            visible: submittedAssessment.assessments.isNotEmpty,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${AppStrings.assessment.tr}:',
+                  style: context.txtTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                children: <TableRow>[
-                  // Header row
-                  TableRow(
-                    decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.1)),
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child:
-                            Text(
-                              AppStrings.assessment.tr,
-                              style: context.txtTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ).centered,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child:
-                            Text(
-                              AppStrings.status.tr,
-                              style: context.txtTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ).centered,
-                      ),
-                    ],
-                  ),
-                  // Data rows
-                  ...assessments.map(
-                    (AssessmentModel assessment) => TableRow(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            assessment.name.toCapitalize,
-                            style: context.txtTheme.bodyMedium,
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(child: _buildStatusChip(assessment.status)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                const SizedBox(height: AppSizes.sm),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4,
+                  children:
+                      submittedAssessment.assessments
+                          .map(
+                            (SubmittedAssessment assessment) => Text(
+                              "- ${assessment.assessment.toCapitalize}",
+                              style: context.txtTheme.bodySmall,
+                            ),
+                          )
+                          .toList(),
+                ),
+              ],
             ),
           ),
 
@@ -180,10 +149,7 @@ class SubmissionTile extends StatelessWidget {
 
     return IntrinsicWidth(
       child: Container(
-        constraints: const BoxConstraints(
-          minWidth: 60,
-          maxWidth: 100,
-        ),
+        constraints: const BoxConstraints(minWidth: 60, maxWidth: 100),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color:

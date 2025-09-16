@@ -42,12 +42,6 @@ class _ReusableDatePickerFieldState extends State<ReusableDatePickerField> {
   late TextEditingController _controller;
   DateTime? _selectedDate;
 
-  String get backendFormattedDate {
-    if (_selectedDate == null) {
-      return '';
-    }
-    return "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}";
-  }
 
   @override
   void initState() {

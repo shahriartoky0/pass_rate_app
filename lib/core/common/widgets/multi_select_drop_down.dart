@@ -305,12 +305,6 @@ class _MultiSelectDropdownState<T> extends State<MultiSelectDropdown<T>> {
 
     Overlay.of(context).insert(overlayEntry!);
 
-    // Auto-focus search field after overlay is shown
-    // if (widget.isSearchable) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     searchFocusNode.requestFocus();
-    //   });
-    // }
   }
 
   Widget _buildSearchField() {
@@ -321,7 +315,7 @@ class _MultiSelectDropdownState<T> extends State<MultiSelectDropdown<T>> {
         focusNode: searchFocusNode,
         decoration: InputDecoration(
           hintText: 'Search items...',
-          hintStyle: TextStyle(color: AppColors.greyLight),
+          hintStyle: const TextStyle(color: AppColors.greyLight),
           prefixIcon: const Icon(CupertinoIcons.search, size: 20),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -359,16 +353,16 @@ class _MultiSelectDropdownState<T> extends State<MultiSelectDropdown<T>> {
             },
             child: const Text(
               'Done',
-              style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+              style: TextStyle(fontSize: 14, color: AppColors.primaryColor),
             ),
           ),
           if (widget.showClearAll)
             TextButton(
               onPressed: () {
-                controller.clearAll();
-                widget.onChanged?.call(controller.selectedValues);
-                _validateInput();
-              },
+              controller.clearAll();
+              widget.onChanged?.call(controller.selectedValues);
+              _validateInput();
+            },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               ),

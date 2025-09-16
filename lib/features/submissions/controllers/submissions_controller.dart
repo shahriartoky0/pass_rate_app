@@ -17,14 +17,47 @@ class SubmissionsController extends GetxController {
   final List<MySubmissionModel> mySubmissions = <MySubmissionModel>[].obs;
   final TextEditingController searchTEController = TextEditingController();
 
+  // Add reactive search query
+  final RxString searchQuery = ''.obs;
+
   @override
   void onInit() {
     getMySubmissions();
     super.onInit();
   }
 
-  handleSearch() {
-    ///TODO : Implement search
+  // Computed property for filtered submissions
+  List<MySubmissionModel> get filteredSubmissions {
+    if (searchQuery.value.isEmpty) {
+      return mySubmissions;
+    }
+
+    return mySubmissions.where((MySubmissionModel submission) {
+      final String query = searchQuery.value.toLowerCase();
+
+      // Search in submission name/title if available
+      final bool nameMatch = (submission.airline).toLowerCase().contains(query);
+
+      // Search in assessments
+      final bool assessmentMatch = submission.assessments.any(
+        (SubmittedAssessment assessment) => (assessment.airline).toLowerCase().contains(query),
+      );
+
+      // Search in submission date
+
+      return nameMatch || assessmentMatch;
+    }).toList();
+  }
+
+  void handleSearch() {
+    // Update the search query with current text field value
+    searchQuery.value = searchTEController.text.trim();
+  }
+
+  // Clear search
+  void clearSearch() {
+    searchTEController.clear();
+    searchQuery.value = '';
   }
 
   Future<void> handleDelete({required MySubmissionModel submission}) async {
@@ -33,8 +66,8 @@ class SubmissionsController extends GetxController {
       final NetworkResponse response = await NetworkCaller().deleteRequest(
         AppUrl.deleteSubmission(submissionId: submission.id),
       );
-
-      if (response.isSuccess) {
+      LoggerUtils.debug(response.jsonResponse);
+      if (response.statusCode == 200) {
         mySubmissions.remove(submission);
         ToastManager.show(
           message: AppStrings.itemDeleted.tr,
@@ -53,7 +86,6 @@ class SubmissionsController extends GetxController {
     }
   }
 
-  /// TODO : Search implementation
   Future<void> getMySubmissions() async {
     try {
       loader.value = true;
