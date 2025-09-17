@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/extensions/widget_extensions.dart';
-import 'package:pass_rate/core/utils/logger_utils.dart';
 import 'package:pass_rate/shared/widgets/slide_animation.dart';
-import '../../../core/config/app_asset_path.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../shared/widgets/custom_appbar.dart' show CustomAppBar;
 import '../../../shared/widgets/lottie_loader.dart';

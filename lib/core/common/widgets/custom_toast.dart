@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../main.dart';
 import '../../design/app_colors.dart';
 
-
 class ToastManager {
   /// Add this in the main.dart ======> [final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();]
 
@@ -31,25 +30,25 @@ class ToastManager {
     _currentToast = OverlayEntry(
       builder:
           (BuildContext context) => Positioned(
-        bottom: 50,
-        left: 20,
-        right: 20,
-        child: SafeArea(
-          child: ToastAnimation(
-            duration: animationDuration,
-            curve: animationCurve,
-            child: CustomToast(
-              icon: icon,
-              message: message,
-              backgroundColor: backgroundColor,
-              iconColor: iconColor,
-              textColor: textColor,
-              borderRadius: borderRadius,
-              padding: padding,
+            bottom: 50,
+            left: 20,
+            right: 20,
+            child: SafeArea(
+              child: ToastAnimation(
+                duration: animationDuration,
+                curve: animationCurve,
+                child: CustomToast(
+                  icon: icon,
+                  message: message,
+                  backgroundColor: backgroundColor,
+                  iconColor: iconColor,
+                  textColor: textColor,
+                  borderRadius: borderRadius,
+                  padding: padding,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
     );
 
     overlayState.insert(_currentToast!);
@@ -155,6 +154,7 @@ class CustomToast extends StatelessWidget {
               child: Text(
                 message,
                 style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 16),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

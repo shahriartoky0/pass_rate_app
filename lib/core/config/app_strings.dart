@@ -24,19 +24,27 @@ class AppStrings {
 
   // Support Plan Descriptions
   static const String supportPlanCadetDesc = "Start your support journey";
+  static const String youAreAboutToDonate = 'You are about to donate:';
   static const String supportPlanCadetPlusDesc = "One-time yearly boost";
   static const String supportPlanFirstOfficerDesc = "Steady support from the right seat";
   static const String supportPlanCaptainDesc = "Big push from the left seat – truly appreciated";
   static const String supportPlanTitle = "Choose a support plan:";
   static const String salaryComparisons = "Salary comparisons";
+  static const String donate = "Donate";
+  static const String continueText = "Continue";
+  static const String securePaymentText = 'This will redirect you to secure payment processing.';
+  static const String chooseDonationAmount = "Choose donation amount:";
+  static const String thankYouForChoosingToDonate = "Thank you for choosing to donate";
+  static const String orACustomAmount =  "Or enter custom amount:";
   static const String realAssessmentInsights = "Real assessment insights";
   static const String futureReleaseOFPilot = "The future release of Pilot-Recruiter.";
   static const String aDedicatedPlatformWhere =
       "A dedicated platform where pilots and airlines connect directly.\nNo more repetitive applications. Let the airlines find you. ";
   static const String proceed = "Proceed";
   static const String cancelPlan = "Cancel Plan";
+  static const String confirmDonation = "Confirm Donation";
   static const String moSubscriptionLock =
-      "No subscription lock. No pressure Just a way to support what we’re building and every bit makes a difference.";
+      "No pressure Just a way to support what we’re building and every bit makes a difference.";
   static const String chooseASupportPlan = 'Choose a support plan:';
 
   // assessment section strings ======>

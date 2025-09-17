@@ -8,9 +8,8 @@ class AppRoutes {
   static const String firstSplashScreen = "/splash-screen";
   static const String nextSplashScreen = "/next-splash-screen";
 
-
   //home routes
-  static const String homeRoute = "/home-page";
+  static const String homeRoute = "/home";
   static const String supportPage = "/support-page";
 
   //submission routes
@@ -21,7 +20,6 @@ class AppRoutes {
   //statistics page
   static const String statisticsScreen = "/statistics-page";
   static const String viewStatisticsScreen = "/view-statistics-page";
-
-
-
-}
+//payment page
+  static const String paymentScreen = "/payment-page";
+ }

@@ -7,6 +7,7 @@ class AppUrl {
   static String airlineAssessment = '$baseUrl/assessments/';
 
   static const String postSubmission = '$baseUrl/submissions';
+  static const String makePayment = '$baseUrl/payment/create-payment';
 
   static String topAirlinesByPassRate({String? year}) {
     return '$baseUrl/statistics/top-airlines-pass-rate?date=$year';

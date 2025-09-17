@@ -3,6 +3,8 @@ import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/features/assessment/bindings/assessment_binding.dart';
 import 'package:pass_rate/features/assessment/screens/confirm_screen.dart';
 import 'package:pass_rate/features/home/bindings/home_binding.dart';
+import 'package:pass_rate/features/payment/bindings/payment_binding.dart';
+import 'package:pass_rate/features/payment/screens/payment_screen.dart';
 import 'package:pass_rate/features/splash_screen/binding/splash_binding.dart';
 import 'package:pass_rate/features/splash_screen/screens/next_splash_screen.dart';
 import 'package:pass_rate/features/statistics/bindings/statistics_binding.dart';
@@ -67,6 +69,12 @@ class AppNavigation {
       page: () => const NextSplashScreen(),
       transition: Transition.noTransition,
       binding: SplashScreenBinding(),
+    ),
+    GetPage<dynamic>(
+      name: AppRoutes.paymentScreen,
+      page: () => const PaymentScreen(),
+      transition: Transition.noTransition,
+      binding: PaymentBinding(),
     ),
   ];
 }
