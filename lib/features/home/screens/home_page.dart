@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pass_rate/core/common/widgets/custom_svg.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
+import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/design/app_icons.dart';
 import '../../../core/design/app_images.dart';
@@ -16,15 +16,11 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController _ = controller;
     return Scaffold(
       /// Lower Helping Button ============>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: helpingButtonWidget(
-        context: context,
-        onTap: () {
-          Get.toNamed(AppRoutes.supportPage);
-        },
-      ),
+      floatingActionButton: const SupportFloatingWidget(),
 
       body: SingleChildScrollView(
         child: Column(
@@ -68,43 +64,6 @@ class HomePage extends GetView<HomeController> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Container helpingButtonWidget({required BuildContext context, required VoidCallback onTap}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 24.0),
-      child: Material(
-        elevation: 3,
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-
-        // Add borderRadius here
-        child: InkWell(
-          splashColor: AppColors.green.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0),
-            width: context.screenWidth * .5,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.green),
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 12,
-              children: <Widget>[
-                CustomSvgImage(assetName: AppIcons.helpIcon, color: AppColors.green, height: 32),
-                Text(
-                  AppStrings.helpUsGrow.tr,
-                  style: context.txtTheme.headlineMedium?.copyWith(color: AppColors.green),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

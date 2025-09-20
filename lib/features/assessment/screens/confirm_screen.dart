@@ -19,6 +19,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
   @override
   Widget build(BuildContext context) {
     final SubmissionResponse submittedResponse = Get.arguments;
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -73,10 +74,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
               ),
               const SizedBox(height: AppSizes.md),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.md,
-                  vertical: AppSizes.md,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.primaryColor),
                   borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
@@ -85,10 +83,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      submittedResponse.airlineName,
-                      style: context.txtTheme.titleMedium,
-                    ),
+                    Text(submittedResponse.airlineName, style: context.txtTheme.titleMedium),
                     Text(
                       submittedResponse.selectedYear.year.toString(),
                       style: context.txtTheme.labelMedium,

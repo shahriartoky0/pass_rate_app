@@ -71,6 +71,7 @@ class CustomBottomSheet extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
       isDismissible: isDismissible,
+      enableDrag: isDismissible,
       sheetAnimationStyle: const AnimationStyle(
         curve: Curves.easeInOut,
         duration: Duration(milliseconds: 300),

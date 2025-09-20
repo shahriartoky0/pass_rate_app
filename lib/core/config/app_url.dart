@@ -8,6 +8,7 @@ class AppUrl {
 
   static const String postSubmission = '$baseUrl/submissions';
   static const String makePayment = '$baseUrl/payment/create-payment';
+  static const String policy = '$baseUrl/policy';
 
   static String topAirlinesByPassRate({String? year}) {
     return '$baseUrl/statistics/top-airlines-pass-rate?date=$year';

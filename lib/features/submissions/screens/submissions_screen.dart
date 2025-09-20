@@ -6,6 +6,7 @@ import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/shared/widgets/slide_animation.dart';
+import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../shared/widgets/custom_appbar.dart' show CustomAppBar;
 import '../../../shared/widgets/lottie_loader.dart';
@@ -20,6 +21,9 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.mySubmission.tr),
+      /// Lower Helping Button ============>
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: const SupportFloatingWidget(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(

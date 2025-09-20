@@ -31,21 +31,25 @@ class AppNavigation {
     GetPage<dynamic>(
       name: AppRoutes.homeRoute,
       page: () => const HomePage(),
-      bindings: [HomeBinding()],
+      transition: Transition.zoom,
+      binding: HomeBinding(),
     ),
     GetPage<dynamic>(
       name: AppRoutes.submissionPage,
-      page: () => SubmissionsScreen(),
+      transition: Transition.rightToLeft,
+      page: () => const SubmissionsScreen(),
       binding: SubmissionsBinding(),
     ),
     GetPage<dynamic>(
       name: AppRoutes.supportPage,
+      transition: Transition.downToUp,
       page: () => const SupportScreen(),
       binding: SupportBinding(),
     ),
     GetPage<dynamic>(
       name: AppRoutes.submitAssessment,
-      page: () => SubmitAssessmentScreen(),
+      transition: Transition.upToDown,
+      page: () => const SubmitAssessmentScreen(),
       binding: AssessmentBinding(),
     ),
     GetPage<dynamic>(
@@ -55,7 +59,8 @@ class AppNavigation {
     ),
     GetPage<dynamic>(
       name: AppRoutes.statisticsScreen,
-      page: () => StatisticsScreen(),
+      transition: Transition.leftToRight,
+      page: () => const StatisticsScreen(),
       binding: StatisticsBinding(),
     ),
 

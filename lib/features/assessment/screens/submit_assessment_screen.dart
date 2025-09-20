@@ -22,7 +22,7 @@ import '../controllers/assessment_controller.dart';
 import '../widgets/custom_progress_bar.dart';
 
 class SubmitAssessmentScreen extends GetView<AssessmentController> {
-  SubmitAssessmentScreen({super.key});
+  const SubmitAssessmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
                   replacement: const LottieLoaderWidget().centered,
                   child: MultiSelectDropdown<String>(
                     items: controller.assessmentItems,
-                    label: AppStrings.assessmentList.tr,
+                    label: AppStrings.whatWasIncludedInYourAssessment.tr,
                     onChanged: (List<String> selected) {
                       controller.updateAssessmentList(selected);
                       LoggerUtils.debug('Selected: $selected');
@@ -157,7 +157,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
-        () => !controller.allAssessmentsCompletedRx.value ?  SizedBox(
+        () =>   SizedBox(
           width: context.screenWidth * 0.9,
           child:
               controller.isLottieVisible.value
@@ -170,7 +170,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
                     total: 4,
                     primaryColor: AppColors.primaryColor,
                   ),
-        ): const SizedBox.shrink(),
+        ),
       ),
     );
   }

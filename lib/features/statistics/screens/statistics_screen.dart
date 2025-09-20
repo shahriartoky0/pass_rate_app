@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import 'package:pass_rate/core/common/widgets/custom_modal.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
 import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
@@ -16,7 +14,7 @@ import 'package:pass_rate/shared/widgets/custom_appbar.dart';
 import 'package:pass_rate/shared/widgets/slide_animation.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/date_picker_field.dart';
-import '../../../core/config/app_asset_path.dart';
+import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/utils/logger_utils.dart';
 import '../../../shared/widgets/lottie_loader.dart';
@@ -33,6 +31,10 @@ class StatisticsScreen extends GetView<StatisticsController> {
     final AssessmentController assessmentController = Get.put(AssessmentController());
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
+
+      /// Lower Helping Button ============>
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: const SupportFloatingWidget(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(
@@ -204,8 +206,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                 Obx(
                   () => Visibility(
                     visible: controller.isLoadingPassRate.value == false,
-                    replacement:
-                    const LottieLoaderWidget().centered,
+                    replacement: const LottieLoaderWidget().centered,
                     child: statisticsContainer(
                       selectedYear: int.tryParse(controller.filterYearOfPassRate.value),
                       context: context,
@@ -224,8 +225,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                 Obx(
                   () => Visibility(
                     visible: controller.isLoadingSubmission.value == false,
-                    replacement:
-                    const LottieLoaderWidget().centered,
+                    replacement: const LottieLoaderWidget().centered,
                     child: statisticsContainer(
                       selectedYear: int.tryParse(controller.filterYearOfSubmission.value),
                       context: context,
@@ -241,7 +241,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
               ],
             ),
 
-            const SizedBox(height: AppSizes.xl),
+            const SizedBox(height: AppSizes.xxxL * 2),
           ],
         ),
       ),

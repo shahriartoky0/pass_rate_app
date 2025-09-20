@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../../core/routes/app_routes.dart';
 
 class SecondSplashController extends GetxController with GetSingleTickerProviderStateMixin {
-
   // Animation controller and animation
   late AnimationController animationController;
   late Animation<double> animation;
@@ -25,10 +24,7 @@ class SecondSplashController extends GetxController with GetSingleTickerProvider
       vsync: this,
     );
 
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    );
+    animation = CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
 
     // Listen to animation changes and update observable
     animation.addListener(() {
@@ -44,6 +40,12 @@ class SecondSplashController extends GetxController with GetSingleTickerProvider
 
     // Start the animation
     animationController.forward();
+  }
+
+  @override
+  void onClose() {
+    animationController.dispose(); // ADD THIS LINE
+    super.onClose();
   }
 
   @override

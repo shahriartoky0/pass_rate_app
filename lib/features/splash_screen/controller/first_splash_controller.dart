@@ -61,6 +61,12 @@ class FirstSplashController extends GetxController with GetSingleTickerProviderS
   }
 
   @override
+  void onClose() {
+    animationController.dispose(); // ADD THIS LINE
+    super.onClose();
+  }
+
+  @override
   void dispose() {
     animationController.dispose();
     super.dispose();

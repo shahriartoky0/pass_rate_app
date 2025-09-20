@@ -8,7 +8,9 @@ import 'package:pass_rate/core/design/app_colors.dart';
 import 'package:pass_rate/core/extensions/strings_extensions.dart';
 import 'package:pass_rate/core/utils/device/device_info.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
+import 'package:pass_rate/features/support/screens/support_screen.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
+import '../../../core/common/widgets/custom_modal.dart';
 import '../../../core/common/widgets/custom_toast.dart';
 import '../../../core/common/widgets/multi_select_drop_down.dart';
 import '../../../core/config/app_url.dart';
@@ -275,6 +277,7 @@ class AssessmentController extends GetxController {
         final String deviceID = await DeviceIdService.getDeviceId() ?? '';
 
         final Map<String, dynamic> submissionData = <String, dynamic>{
+          // "deviceId": deviceID,
           "deviceId": AppConstants.demoDeviceId,
           "airline": selectedAirlineName.value,
           "date": isoFormatString,
@@ -300,8 +303,7 @@ class AssessmentController extends GetxController {
           final SubmissionResponse submissionResponse = SubmissionResponse.fromJson(
             response.jsonResponse ?? <String, dynamic>{},
           );
-
-          await Future<void>.delayed(const Duration(seconds: 2));
+          await Get.toNamed(AppRoutes.supportPage);
           Get.offNamed(AppRoutes.confirmSubmissionPage, arguments: submissionResponse);
         } else {
           ToastManager.show(

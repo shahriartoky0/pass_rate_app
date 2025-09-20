@@ -35,7 +35,7 @@ class AppStrings {
   static const String securePaymentText = 'This will redirect you to secure payment processing.';
   static const String chooseDonationAmount = "Choose donation amount:";
   static const String thankYouForChoosingToDonate = "Thank you for choosing to donate";
-  static const String orACustomAmount =  "Or enter custom amount:";
+  static const String orACustomAmount = "Or enter custom amount:";
   static const String realAssessmentInsights = "Real assessment insights";
   static const String futureReleaseOFPilot = "The future release of Pilot-Recruiter.";
   static const String aDedicatedPlatformWhere =
@@ -57,7 +57,7 @@ class AppStrings {
   static const String chooseAssessmentYear = "Choose the year of assessment";
   static const String whatWasIncludedInYour = "What was included in your assessment?";
   static const String assessment = "Assessment";
-  static const String assessmentList = "Assessment List";
+  static const String whatWasIncludedInYourAssessment = "What was included in your assessment";
   static const String chooseTasks = "Choose tasks";
   static const String pass = "PASS";
   static const String fail = "FAIL";
@@ -110,12 +110,66 @@ class AppStrings {
   static const String token = 'token';
   static const String authToken = 'authToken';
   static const String authTokenExpiry = 'authTokenExpiry';
-  static const String refressToken = 'refressToken';
-  static const String refressTokenExpiry = 'refressTokenExpiry';
 
   // HomePage
   static const String submitAssessment = 'Submit Assessment';
   static const String statistics = 'Statistics';
   static const String yourSubmissions = 'Your Submissions';
   static const String helpUsGrow = 'Help Us to Grow!';
+  static const String termsAndConditions = 'Terms & Policies';
+  static const String iAgreeToTheTerms = 'I agree to the terms and policy';
+
+  // Privacy Policy Default text ===== >
+  static const String privacyPolicyTerms = '''
+**Privacy Policy**
+
+ 
+Your privacy is important to us. This privacy policy explains how we collect, use, and protect your data when you use our app.
+
+1. **Information We Collect**
+   - **User Input**: We may collect information you provide, such as assessments and submission data, when you interact with the app.
+   - **Anonymous Data**: We may collect non-personally identifiable information, such as usage statistics, to improve the app's performance.
+
+2. **How We Use Your Information**
+   - **Assessments and Submissions**: Your assessments and submissions are stored within the app to help you track and review your past submissions and stats.
+   - **Statistics**: We use the collected data to show aggregate statistics related to assessments.
+   - **Donations**: If you choose to donate through Stripe, your payment details will be processed by Stripe. We do not store your payment information.
+
+3. **Data Sharing**
+   We do not share your data with third parties unless required by law or as necessary to process donations via Stripe.
+
+4. **Security**
+   We take reasonable measures to protect your data, but please note that no method of data transmission over the internet is 100% secure.
+
+5. **Your Rights**
+   Since no personal login or identifiable information is stored in the app, you may opt out of any features or data-sharing interactions through the app's settings.
+
+6. **Changes to This Policy**
+   We may update this privacy policy from time to time. Any changes will be posted in this document with an updated effective date.
+ 
+**Terms and Conditions**
+
+ 
+By using this app, you agree to the following terms and conditions.
+
+1. **App Usage**
+   - The app allows users to view assessments, check their submissions, review statistics, and donate to support the app.
+   - You may not misuse the app, including but not limited to attempting to modify, decompile, or reverse-engineer the app.
+
+2. **Donations**
+   - The app provides an option for users to donate to support the app via Stripe.
+   - All donations are processed securely through Stripe, and your payment information is handled by Stripe. We do not store your payment details.
+
+3. **Accuracy of Information**
+   - While we strive to provide accurate and up-to-date information regarding assessments, submissions, and statistics, we do not guarantee the accuracy, completeness, or reliability of the data.
+
+4. **No User Login**
+   - The app does not require user registration or login, and there are no accounts created within the app.
+
+5. **Limitation of Liability**
+   - We are not liable for any damages, including but not limited to loss of data, disruptions to your device, or any indirect, incidental, or consequential damages arising from the use of this app.
+
+6. **Changes to Terms**
+   - We may update these terms at any time. Changes will be effective immediately upon posting within the app.
+''';
 }
