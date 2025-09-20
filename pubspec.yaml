@@ -22,12 +22,20 @@ dependencies:
   intl: ^0.20.2
   #for loader :
   flutter_spinkit:
-#for internet connection:
+  #for internet connection:
   connectivity_plus:
-#for logging the error:
+  #for logging the error:
   logger:
   image_picker:
   file_picker:
+  #for icon :
+  flutter_launcher_icons: ^0.14.4
+  #for the device ID :
+  device_info_plus: ^10.1.0
+  get_storage: ^2.1.1
+  lottie: ^3.3.1
+  webview_flutter: ^4.11.0
+
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +52,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/icons/
+    - assets/animation/
 
 
 
